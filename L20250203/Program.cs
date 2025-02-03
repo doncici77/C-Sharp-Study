@@ -1,4 +1,4 @@
-﻿namespace ConsoleApp1
+﻿namespace L20250203
 {
     internal class Program
     {
