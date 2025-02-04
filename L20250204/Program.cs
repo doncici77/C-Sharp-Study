@@ -1,26 +1,35 @@
-﻿using System.Text;
-
-namespace L20250204
+﻿namespace L20250204
 {
     internal class Program
     {
+        static int[] trumpCard = new int[52]; // 52까지의 숫자 배열(트럼프 카드)
+        static Random random = new Random(); // 임의의 숫자
+        static string[] cardData = new string[8]; // 뽑은 카드 문양 정보       
+        static int[] cardNumData = new int[8]; // 뽑은 카드번호 정보
+
         static void Main(string[] args)
         {
-            int[] num = new int[52];
-            Random random = new Random();
-            StringBuilder output = new StringBuilder();
-            string[] cardData = new string[8];
 
             // 1 - 13 -> Heart, 1 -> A, 11 -> J, 12 -> Q, 13 -> K
             // 14 - 26 -> Diamond
             // 27 - 39 -> Clover
             // 40 - 52 -> Spade
 
-            for(int i = 0; i < num.Length; i++)
-            {
-                num[i] = i + 1;
-            }
+            Initialize(); // 초기화
+            Shuffle(); // 섞기
+            Classify(); // 8개를 뽑고 분류
+        }
 
+        static void Initialize()
+        {
+            for (int i = 0; i < trumpCard.Length; i++)
+            {
+                trumpCard[i] = i + 1;
+            }
+        }
+
+        static void Shuffle()
+        {
             /*//시간복잡도(N^2)
             for (int i = 0; i < outNum; i++) // 출력 값에 랜덥값 넣기
             {
@@ -40,57 +49,63 @@ namespace L20250204
 
             // 시간복잡도 (N)
             // Fisher-Yates shuffle (배열 섞기)
-            for (int i = num.Length - 1; i > 0; i--)
+            for (int i = trumpCard.Length - 1; i > 0; i--)
             {
                 // 랜덤 인덱스 선택
                 int j = random.Next(i + 1);
 
                 // 현재 인덱스와 랜덤 인덱스 값을 교환
-                int temp = num[i];
-                num[i] = num[j];
-                num[j] = temp;
+                int temp = trumpCard[i];
+                trumpCard[i] = trumpCard[j];
+                trumpCard[j] = temp;
             }
+        }
 
-            // 카드 종류
-            for (int i = 0; i < 8; i++)
+        static void Classify()
+        {
+            // 카드 종류 분류
+            for (int i = 0; i < cardData.Length; i++)
             {
                 // 카드 문양
-                if (num[i] < 14)
+                if (trumpCard[i] < 14)
                 {
                     cardData[i] = "Heart";
                 }
-                else if (14 <= num[i] && num[i] < 27)
+                else if (14 <= trumpCard[i] && trumpCard[i] < 27)
                 {
                     cardData[i] = "Diamond";
                 }
-                else if (27 <= num[i] && num[i] < 40)
+                else if (27 <= trumpCard[i] && trumpCard[i] < 40)
                 {
                     cardData[i] = "Clover";
                 }
-                else if (40 <= num[i] && num[i] < 53)
+                else if (40 <= trumpCard[i] && trumpCard[i] < 53)
                 {
                     cardData[i] = "Spade";
                 }
 
                 // A J Q K
-                if ((num[i] % 13) == 1)
+                if ((trumpCard[i] % 13) == 1)
                 {
                     cardData[i] += " A";
                 }
-                else if ((num[i] % 13) == 11)
+                else if ((trumpCard[i] % 13) == 11)
                 {
                     cardData[i] += " J";
                 }
-                else if ((num[i] % 13) == 12)
+                else if ((trumpCard[i] % 13) == 12)
                 {
                     cardData[i] += " Q";
                 }
-                else if ((num[i] % 13) == 0)
+                else if ((trumpCard[i] % 13) == 0)
                 {
                     cardData[i] += " K";
                 }
 
-                Console.WriteLine(num[i].ToString() + " "+ cardData[i]);
+                cardNumData[i] = trumpCard[i]; // 카드번호 정보 저장
+
+                // 데이터 잘 저장 되었는지 확인 출력
+                Console.WriteLine(cardNumData[i].ToString() + " " + cardData[i]);
             }
         }
     }
