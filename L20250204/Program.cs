@@ -2,8 +2,47 @@
 
 namespace L20250204
 {
-    //강사님 버전
     internal class Program
+    {
+        static void Main(string[] args)
+        {
+            string name = "이제훈";
+            string message = String.Format("{0}님 {1} 안녕하세요", name, "졸라");
+            string data = "10, 20, 30, 40";
+
+            string[] datas = data.Split(",");
+
+            for (int i = 0; i < datas.Length; i++)
+            {
+                Console.WriteLine(datas[i].Trim()); // Trim 공백 제거, Split(문자) 문자 기준으로 나누기
+            }
+
+            // SubString(2) 012 뺀 배열부터 출력, ToLower 소문자로 바꿈, Replace(문자, 문자) 자리바꿈
+            Console.WriteLine(message);
+
+            // int, float, char, 등등
+            char D = (char)65;
+            int A = 2;
+            float B = 3.5f;
+            long C = 0;
+
+            B = (float)A; // int에서 float로 형변환
+
+            A = (int)B; // float에서 int로 형변환
+
+            C = (long)B;
+
+            // Parse: 번역 -> 형변환 함수, TryParse: 형변환 시도 실패시 0 반환
+            // in 키워드: 값을 바꿀수 없음, out: 값을 무조건 함수내에서 초기화 해줘야 한다. ref: 그냥 참조용
+            float.TryParse(datas[0], out B);
+
+            A.ToString();
+
+            Console.WriteLine(B);
+        }
+    }
+    #region 강사님 버전
+    /*internal class Program
     {
         enum CardType
         {
@@ -18,14 +57,14 @@ namespace L20250204
         {
             int[] deck = new int[52];
 
-            Initialize(deck); // 덱 초기화
+            Initialize(ref deck); // 덱 초기화
             Shuffle(deck); // 덱 셔플
             Print(deck); // 출력
 
         }
 
         //초기화 함수
-        static void Initialize(int[] deck)
+        static void Initialize(ref int[] deck) // ref 변수: 이 값은 참조형식으로 사용하겠다.
         {
             for(int i = 0; i < deck.Length; i++)
             {
@@ -143,7 +182,9 @@ namespace L20250204
             return cardName;
         }
 
-    }
+    }*/
+    #endregion
+
     #region 하드코딩 내 버전
     /*internal class Program
     {
