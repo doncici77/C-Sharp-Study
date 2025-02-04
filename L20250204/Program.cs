@@ -2,7 +2,150 @@
 
 namespace L20250204
 {
+    //강사님 버전
     internal class Program
+    {
+        enum CardType
+        {
+            None = -1,
+            Heart,
+            Diamond,
+            Clover,
+            Spade
+        }
+
+        static void Main(string[] args)
+        {
+            int[] deck = new int[52];
+
+            Initialize(deck); // 덱 초기화
+            Shuffle(deck); // 덱 셔플
+            Print(deck); // 출력
+
+        }
+
+        //초기화 함수
+        static void Initialize(int[] deck)
+        {
+            for(int i = 0; i < deck.Length; i++)
+            {
+                deck[i] = i + 1;
+            }
+        }
+
+        static void Shuffle(int[] deck)
+        {
+            Random random = new Random();
+
+            for(int i = 0;i < deck.Length * 10;i++) // 52장번 X 10번 셔플 520번 셔플
+            {
+                int firstCardIndex = random.Next(0, deck.Length);
+                int secondCardIndex = random.Next(0, deck.Length);
+
+                //임의의 카드 두개 셔플
+                int temp = deck[firstCardIndex];
+                deck[firstCardIndex] = deck[secondCardIndex];
+                deck[secondCardIndex] = temp;
+            }
+        }
+
+        static void Print(int[] deck)
+        {
+            PrintCardList(deck);
+
+            int computerScore = GetScore(deck[0]) + GetScore(deck[1]) + GetScore(deck[2]);
+            int playerScore = GetScore(deck[3]) + GetScore(deck[4]) + GetScore(deck[5]);
+
+            Console.WriteLine($"Computer score : {computerScore}, Player Score : {playerScore}");
+
+            if (playerScore >= 21 && computerScore < 21)
+            {
+                //Computer Win
+                Console.WriteLine("Computer Win");
+            }
+            else if(computerScore >= 21 && playerScore < 21)
+            {
+                //Player Win
+                Console.WriteLine("Player Win");
+            }
+            else if(computerScore >= 21 && playerScore >= 21)
+            {
+                //Player Win
+                Console.WriteLine("Player Win");
+            }
+            else if(computerScore <= playerScore)
+            {
+                //Player Win
+                Console.WriteLine("Player Win");
+            }
+            else
+            {
+                //Computer Win
+                Console.WriteLine("Computer Win");
+            }
+
+        }
+
+        static void PrintCardList(int[] deck)
+        {
+            Console.WriteLine("Computer");
+            for (int i = 0; i < 3; i++)
+            {
+                Console.WriteLine($"{deck[i]} = {CheckCardType(deck[i])} {CheckCardName(deck[i])}");
+            }
+            Console.WriteLine("----------------------------");
+
+            Console.WriteLine("Player");
+            for (int i = 3; i < 6; i++)
+            {
+                Console.WriteLine($"{deck[i]} = {CheckCardType(deck[i])} {CheckCardName(deck[i])}");
+            }
+        }
+
+        static int GetScore(int cardNumber) // 점수계산 컴포넌트
+        {
+            int value = ((cardNumber - 1) % 13) + 1;
+            return value > 10 ? 10 : value;
+        }
+
+        static CardType CheckCardType(int cardNumber) // 카드 타입 분류 enum 사용
+        {
+            int valueType = (cardNumber - 1) / 12; // 최적화 된 버전?
+
+            return (CardType)valueType;
+        }
+
+        static string CheckCardName(int cardNumber) // 카트 이름과 번호 분류 swich문 사용
+        {
+            int cardValue = ((cardNumber -1) / 13) + 1; // case를 사용하기 위해 계산
+            string cardName;
+
+            switch(cardValue)
+            {
+                case 1:
+                    cardName = "A";
+                    break;
+                case 11: 
+                    cardName = "J";
+                    break;
+                case 12:
+                    cardName = "Q";
+                    break;
+                case 13:
+                    cardName = "K";
+                    break;
+                default:
+                    cardName = cardValue.ToString();
+                    break;
+
+            }
+
+            return cardName;
+        }
+
+    }
+    #region 하드코딩 내 버전
+    /*internal class Program
     {
         static int[] trumpCard = new int[52]; // 52까지의 숫자 배열(트럼프 카드)
 
@@ -35,28 +178,28 @@ namespace L20250204
 
         static void Shuffle()
         {
-            /*//시간복잡도(N^2)
-            for (int i = 0; i < outNum; i++) // 출력 값에 랜덥값 넣기
-            {
-                val[i] = num[random.Next(1, size + 1)];
+            ////시간복잡도(N^2)
+            //for (int i = 0; i < outNum; i++) // 출력 값에 랜덥값 넣기
+            //{
+            //    val[i] = num[random.Next(1, size + 1)];
 
-                for (int j = 0; j < i; j++)
-                {
-                    if (val[i] == val[j] && i != j) // 겹치는게 있는지 확인
-                    {
-                        val[i] = num[random.Next(1, size + 1)];
-                        j = 0;
-                    }
-                }
+            //    for (int j = 0; j < i; j++)
+            //    {
+            //        if (val[i] == val[j] && i != j) // 겹치는게 있는지 확인
+            //        {
+            //            val[i] = num[random.Next(1, size + 1)];
+            //            j = 0;
+            //        }
+            //    }
 
-                output.AppendLine(val[i].ToString()); // 문자열에 값을 저장
-            }*/
+            //    output.AppendLine(val[i].ToString()); // 문자열에 값을 저장
+            //}
 
             Random random = new Random(); // 임의의 숫자
 
             // 시간복잡도 (N)
             // Fisher-Yates shuffle (배열 섞기)
-            for (int i = 0; i <  trumpCard.Length * 10; ++i)
+            for (int i = 0; i < trumpCard.Length * 10; ++i)
             {
                 int firstCardIndex = random.Next(0, trumpCard.Length);
                 int secondCardIndex = random.Next(0, trumpCard.Length);
@@ -103,7 +246,7 @@ namespace L20250204
                 {
                     cardData[i] += " Q";
                 }
-                else if ((trumpCard[i] % 13) == 0)  
+                else if ((trumpCard[i] % 13) == 0)
                 {
                     cardData[i] += " K";
                 }
@@ -126,7 +269,7 @@ namespace L20250204
 
             for (int i = 0; i < drawNum; i++)
             {
-                if(i < 3) // 3보다 작을때 상대(컴퓨터) 점수 계산
+                if (i < 3) // 3보다 작을때 상대(컴퓨터) 점수 계산
                 {
                     if ((cardNumData[i] % 13) > 10) // J Q K = 10
                     {
@@ -141,7 +284,7 @@ namespace L20250204
                         computerScore += cardNumData[i] % 13;
                     }
                 }
-                else if(i >= 3) // 3보다 클때 플레이어 점수 게산
+                else if (i >= 3) // 3보다 클때 플레이어 점수 게산
                 {
                     if ((cardNumData[i] % 13) > 10) // J Q K = 10
                     {
@@ -157,12 +300,12 @@ namespace L20250204
                     }
                 }
             }
-            
+
             Console.WriteLine();
             Console.WriteLine($"상대의 점수는: {computerScore.ToString()}");
             Console.WriteLine($"플레이어의 점수는: {playerScore.ToString()}");
 
-            if(computerScore > 21 && playerScore > 21)
+            if (computerScore > 21 && playerScore > 21)
             {
                 Console.WriteLine();
                 Console.WriteLine("무승부!");
@@ -179,7 +322,7 @@ namespace L20250204
             }
             else
             {
-                if(computerScore > playerScore)
+                if (computerScore > playerScore)
                 {
                     Console.WriteLine();
                     Console.WriteLine("상대 승!");
@@ -196,5 +339,6 @@ namespace L20250204
                 }
             }
         }
-    }
+    }*/
+    #endregion
 }
