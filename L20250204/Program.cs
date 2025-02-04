@@ -161,6 +161,40 @@ namespace L20250204
             Console.WriteLine();
             Console.WriteLine($"상대의 점수는: {computerScore.ToString()}");
             Console.WriteLine($"플레이어의 점수는: {playerScore.ToString()}");
+
+            if(computerScore > 21 && playerScore > 21)
+            {
+                Console.WriteLine();
+                Console.WriteLine("무승부!");
+            }
+            else if (computerScore > 21 && playerScore < 21)
+            {
+                Console.WriteLine();
+                Console.WriteLine("플레이어 승!");
+            }
+            else if (computerScore < 21 && playerScore > 21)
+            {
+                Console.WriteLine();
+                Console.WriteLine("상대 승!");
+            }
+            else
+            {
+                if(computerScore > playerScore)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("상대 승!");
+                }
+                else if (computerScore < playerScore)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("플레이어 승!");
+                }
+                else
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("무승부!");
+                }
+            }
         }
     }
 }
