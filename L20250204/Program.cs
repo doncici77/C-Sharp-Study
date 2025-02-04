@@ -126,7 +126,7 @@ namespace L20250204
 
             for (int i = 0; i < drawNum; i++)
             {
-                if(i < 3)
+                if(i < 3) // 3보다 작을때 상대(컴퓨터) 점수 계산
                 {
                     if ((cardNumData[i] % 13) > 10) // J Q K = 10
                     {
@@ -141,7 +141,7 @@ namespace L20250204
                         computerScore += cardNumData[i] % 13;
                     }
                 }
-                else if(i >= 3)
+                else if(i >= 3) // 3보다 클때 플레이어 점수 게산
                 {
                     if ((cardNumData[i] % 13) > 10) // J Q K = 10
                     {
