@@ -50,104 +50,47 @@ namespace L20250204
                 num[j] = temp;
             }
 
-            // 섞인 배열에서 첫 8개 숫자 출력
+            // 카드 종류
             for (int i = 0; i < 8; i++)
             {
+                // 카드 문양
                 if (num[i] < 14)
                 {
                     output.Append(num[i].ToString() + " Heart");
-                    if((num[i] % 13) == 1)
-                    {
-                        output.AppendLine(" A");
-                    }
-                    else if ((num[i] % 13) == 11)
-                    {
-                        output.AppendLine(" J");
-                    }
-                    else if ((num[i] % 13) == 12)
-                    {
-                        output.AppendLine(" Q");
-                    }
-                    else if ((num[i] % 13) == 0)
-                    {
-                        output.AppendLine(" K");
-                    }
-                    else
-                    {
-                        output.AppendLine();
-                    }
                 }
                 else if (14 <= num[i] && num[i] < 27)
                 {
                     output.Append(num[i].ToString() + " Diamond");
-                    if ((num[i] % 13) == 1)
-                    {
-                        output.AppendLine(" A");
-                    }
-                    else if ((num[i] % 13) == 11)
-                    {
-                        output.AppendLine(" J");
-                    }
-                    else if ((num[i] % 13) == 12)
-                    {
-                        output.AppendLine(" Q");
-                    }
-                    else if ((num[i] % 13) == 0)
-                    {
-                        output.AppendLine(" K");
-                    }
-                    else
-                    {
-                        output.AppendLine();
-                    }
                 }
                 else if (27 <= num[i] && num[i] < 40)
                 {
                     output.Append(num[i].ToString() + " Clover");
-                    if ((num[i] % 13) == 1)
-                    {
-                        output.AppendLine(" A");
-                    }
-                    else if ((num[i] % 13) == 11)
-                    {
-                        output.AppendLine(" J");
-                    }
-                    else if ((num[i] % 13) == 12)
-                    {
-                        output.AppendLine(" Q");
-                    }
-                    else if ((num[i] % 13) == 0)
-                    {
-                        output.AppendLine(" K");
-                    }
-                    else
-                    {
-                        output.AppendLine();
-                    }
                 }
                 else if (40 <= num[i] && num[i] < 53)
                 {
                     output.Append(num[i].ToString() + " Spade");
-                    if ((num[i] % 13) == 1)
-                    {
-                        output.AppendLine(" A");
-                    }
-                    else if ((num[i] % 13) == 11)
-                    {
-                        output.AppendLine(" J");
-                    }
-                    else if ((num[i] % 13) == 12)
-                    {
-                        output.AppendLine(" Q");
-                    }
-                    else if ((num[i] % 13) == 0)
-                    {
-                        output.AppendLine(" K");
-                    }
-                    else
-                    {
-                        output.AppendLine();
-                    }
+                }
+
+                // a j q k
+                if ((num[i] % 13) == 1)
+                {
+                    output.AppendLine(" A");
+                }
+                else if ((num[i] % 13) == 11)
+                {
+                    output.AppendLine(" J");
+                }
+                else if ((num[i] % 13) == 12)
+                {
+                    output.AppendLine(" Q");
+                }
+                else if ((num[i] % 13) == 0)
+                {
+                    output.AppendLine(" K");
+                }
+                else
+                {
+                    output.AppendLine();
                 }
             }
 
