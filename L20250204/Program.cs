@@ -9,6 +9,7 @@ namespace L20250204
             int[] num = new int[52];
             Random random = new Random();
             StringBuilder output = new StringBuilder();
+            string[] cardData = new string[8];
 
             // 1 - 13 -> Heart, 1 -> A, 11 -> J, 12 -> Q, 13 -> K
             // 14 - 26 -> Diamond
@@ -56,45 +57,41 @@ namespace L20250204
                 // 카드 문양
                 if (num[i] < 14)
                 {
-                    output.Append(num[i].ToString() + " Heart");
+                    cardData[i] = "Heart";
                 }
                 else if (14 <= num[i] && num[i] < 27)
                 {
-                    output.Append(num[i].ToString() + " Diamond");
+                    cardData[i] = "Diamond";
                 }
                 else if (27 <= num[i] && num[i] < 40)
                 {
-                    output.Append(num[i].ToString() + " Clover");
+                    cardData[i] = "Clover";
                 }
                 else if (40 <= num[i] && num[i] < 53)
                 {
-                    output.Append(num[i].ToString() + " Spade");
+                    cardData[i] = "Spade";
                 }
 
-                // a j q k
+                // A J Q K
                 if ((num[i] % 13) == 1)
                 {
-                    output.AppendLine(" A");
+                    cardData[i] += " A";
                 }
                 else if ((num[i] % 13) == 11)
                 {
-                    output.AppendLine(" J");
+                    cardData[i] += " J";
                 }
                 else if ((num[i] % 13) == 12)
                 {
-                    output.AppendLine(" Q");
+                    cardData[i] += " Q";
                 }
                 else if ((num[i] % 13) == 0)
                 {
-                    output.AppendLine(" K");
+                    cardData[i] += " K";
                 }
-                else
-                {
-                    output.AppendLine();
-                }
-            }
 
-            Console.WriteLine(output.ToString());
+                Console.WriteLine(num[i].ToString() + " "+ cardData[i]);
+            }
         }
     }
 }
