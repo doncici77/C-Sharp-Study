@@ -1,11 +1,15 @@
-﻿namespace L20250204
+﻿using System;
+
+namespace L20250204
 {
     internal class Program
     {
         static int[] trumpCard = new int[52]; // 52까지의 숫자 배열(트럼프 카드)
-        static Random random = new Random(); // 임의의 숫자
-        static string[] cardData = new string[8]; // 뽑은 카드 문양 정보       
-        static int[] cardNumData = new int[8]; // 뽑은 카드번호 정보
+
+        static int drawNum = 6; // 뽑을 카드 갯수
+
+        static string[] cardData = new string[drawNum]; // 뽑은 카드 문양 정보       
+        static int[] cardNumData = new int[drawNum]; // 뽑은 카드번호 정보    
 
         static void Main(string[] args)
         {
@@ -18,6 +22,7 @@
             Initialize(); // 초기화
             Shuffle(); // 섞기
             Classify(); // 8개를 뽑고 분류
+            CalculateScore(); // 점수계산
         }
 
         static void Initialize()
@@ -47,17 +52,18 @@
                 output.AppendLine(val[i].ToString()); // 문자열에 값을 저장
             }*/
 
+            Random random = new Random(); // 임의의 숫자
+
             // 시간복잡도 (N)
             // Fisher-Yates shuffle (배열 섞기)
-            for (int i = trumpCard.Length - 1; i > 0; i--)
+            for (int i = 0; i <  trumpCard.Length * 10; ++i)
             {
-                // 랜덤 인덱스 선택
-                int j = random.Next(i + 1);
+                int firstCardIndex = random.Next(0, trumpCard.Length);
+                int secondCardIndex = random.Next(0, trumpCard.Length);
 
-                // 현재 인덱스와 랜덤 인덱스 값을 교환
-                int temp = trumpCard[i];
-                trumpCard[i] = trumpCard[j];
-                trumpCard[j] = temp;
+                int temp = trumpCard[firstCardIndex];
+                trumpCard[firstCardIndex] = trumpCard[secondCardIndex];
+                trumpCard[secondCardIndex] = temp;
             }
         }
 
@@ -97,16 +103,64 @@
                 {
                     cardData[i] += " Q";
                 }
-                else if ((trumpCard[i] % 13) == 0)
+                else if ((trumpCard[i] % 13) == 0)  
                 {
                     cardData[i] += " K";
+                }
+                else
+                {
+                    cardData[i] += " " + (trumpCard[i] % 13).ToString();
                 }
 
                 cardNumData[i] = trumpCard[i]; // 카드번호 정보 저장
 
                 // 데이터 잘 저장 되었는지 확인 출력
-                Console.WriteLine(cardNumData[i].ToString() + " " + cardData[i]);
+                Console.WriteLine($"{cardNumData[i].ToString()} {cardData[i]}");
             }
+        }
+
+        static void CalculateScore()
+        {
+            int computerScore = 0;
+            int playerScore = 0;
+
+            for (int i = 0; i < drawNum; i++)
+            {
+                if(i < 3)
+                {
+                    if ((cardNumData[i] % 13) > 10) // J Q K = 10
+                    {
+                        computerScore += 10;
+                    }
+                    else if ((cardNumData[i] % 13) == 1) // A일 경우 1 혹은 11?
+                    {
+                        computerScore += 11;
+                    }
+                    else
+                    {
+                        computerScore += cardNumData[i] % 13;
+                    }
+                }
+                else if(i >= 3)
+                {
+                    if ((cardNumData[i] % 13) > 10) // J Q K = 10
+                    {
+                        playerScore += 10;
+                    }
+                    else if ((cardNumData[i] % 13) == 1) // A일 경우 1 혹은 11?
+                    {
+                        playerScore += 11;
+                    }
+                    else
+                    {
+                        playerScore += cardNumData[i] % 13;
+                    }
+                }
+            }
+            
+            Console.WriteLine();
+            Console.WriteLine($"상대의 점수는: {computerScore.ToString()}");
+            Console.WriteLine($"플레이어의 점수는: {playerScore.ToString()}");
         }
     }
 }
