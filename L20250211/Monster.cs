@@ -16,8 +16,38 @@ namespace L20250211
         {
             Console.WriteLine("몬스터 소멸자");
         }
-        public int hp = 100;
-        public int gold = 0;
+        protected int hp = 100;
+        /*public int HP
+        { 
+            get 
+            { 
+                return hp; // 매개변수가 없을때
+            }
+            set 
+            { 
+                hp = value; // 매개변수가 있을때
+            }
+        }*/
+
+        public int HP
+        {
+            get;
+            set;
+        }
+
+        protected int gold = 0;
+
+        public int GetHP()
+        {
+            return hp;
+        }
+        public void SetHP(int value)
+        {
+            if(value >= 0)
+            {
+                hp = value;
+            }
+        }
         public void Attack()
         {
 
