@@ -9,9 +9,31 @@ namespace L20250217
 {
     public class Engine
     {
-        protected bool isRunning = true;
+        private Engine()
+        {
 
-        protected ConsoleKeyInfo keyInfo;
+        }
+
+        static protected Engine instance;
+
+        public static Engine Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new Engine();
+                }
+
+                return instance;
+            }
+        }
+
+        protected bool isRunning = true; // 게임이 돌아가는 동안 계속 돌아가게 하기 위해 사용되는 변수
+
+        protected ConsoleKeyInfo keyInfo; // 키보드 입력을 받기 위한 변수
+
+        public World world; // World 객체 생성
 
         public void Load()
         {
@@ -28,15 +50,15 @@ namespace L20250217
                 "**********"
             };
 
-            world = new World();
+            world = new World(); // world 객체 생성
 
-            for(int y = 0; y < scene.Length; y++)
+            for (int y = 0; y < scene.Length; y++)
             {
                 for(int x = 0; x < scene[y].Length; x++)
                 {
                     if(scene[y][x] == '*')
                     {
-                        Wall wall = new Wall(x, y, scene[y][x]);
+                        Wall wall = new Wall(x, y, scene[y][x]); // wall 객체 생성
                         world.Instanciate(wall); // 만든거 등록
                     }
                     else if(scene[y][x] == ' ')
@@ -64,9 +86,9 @@ namespace L20250217
             }
         }
 
-        public void Input()
+        public void ProcessInput()
         {
-            keyInfo = Console.ReadKey();
+            Input.Process();
         }
 
         public void Update()
@@ -76,6 +98,7 @@ namespace L20250217
 
         public void Rander()
         {
+            Console.Clear();
             world.Rander();
         }
 
@@ -83,12 +106,11 @@ namespace L20250217
         {
             while (isRunning)
             {
-                Input();
+                ProcessInput();
                 Update();
                 Rander();
             }
         }
 
-        public World world;
     }
 }

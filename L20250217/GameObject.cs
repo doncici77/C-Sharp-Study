@@ -8,8 +8,8 @@ namespace L20250217
 {
     public class GameObject
     {
-        public int X;
-        public int Y;
+        public int X; // X좌표
+        public int Y; // Y좌표
         public char Shape; // Mesh, Sprite
 
         public virtual void Update()

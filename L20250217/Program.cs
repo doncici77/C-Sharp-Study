@@ -2,13 +2,31 @@
 {
     internal class Program
     {
+        class Singleton
+        {
+            private Singleton()
+            {
+
+            }
+
+            static Singleton instance;
+            static public Singleton Instance
+            {
+                get
+                {
+                    if (instance == null)
+                    {
+                        instance = new Singleton();
+                    }
+                    return instance;
+                }
+            }
+        }
         static void Main(string[] args)
         {
-            Engine engine = new Engine();
+            Engine.Instance.Load();
 
-            engine.Load();
-
-            engine.Run();
+            Engine.Instance.Run();
         }
     }
 }
