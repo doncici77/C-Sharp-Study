@@ -9,7 +9,6 @@ namespace L20250218
     public class World
     {
         public GameObject[] gameObject = new GameObject[100];
-        public GameObject[] beforegameObject = new GameObject[100];
 
         public int useGameObjectCount = 0;
 
