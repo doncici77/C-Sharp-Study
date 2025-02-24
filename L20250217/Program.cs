@@ -5,14 +5,14 @@ namespace L20250217
     internal class Program
     {
         // 네트워크에 접속 했지만 비밀번호가 틀리다.
-        public class CustomException : Exception
+        class CustomException : Exception
         {
             public CustomException() : base("이거 내가 만든 예외")
             {
 
             }
         }
-        public class WrongPasswordException : Exception
+        class WrongPasswordException : Exception
         {
             public WrongPasswordException() : base("비번 틀림")
             {
@@ -42,10 +42,11 @@ namespace L20250217
         }
         static void Main(string[] args)
         {
-            //Engine.Instance.Load("level02.map");
+            Engine.Instance.Load("level02.map");
 
-            //Engine.Instance.Run();
+            Engine.Instance.Run();
 
+            /*// 에외 처리 예시
             StreamReader sr = null;
 
             try
@@ -71,16 +72,16 @@ namespace L20250217
             {
                 Console.WriteLine(e.Message);
             }
-            catch(WrongPasswordException e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            //catch(WrongPasswordException e)
+            //{
+            //    Console.WriteLine(e.Message);
+            //}
             finally
             {
                 // network, 파일 입출력
                 Console.WriteLine("finaly");
                 sr.Close();
-            }
+            }*/
 
             /*// 파일 입출력 예시
             string tempScene = "";
