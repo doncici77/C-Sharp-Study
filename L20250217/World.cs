@@ -8,18 +8,17 @@ namespace L20250217
 {
     public class World
     {
-        public GameObject[] gameObjects = new GameObject[100]; // 100개의 GameObject를 담을 수 있는 배열
-        public int useGameObjectCount = 0; // 현재 사용중인 GameObject의 개수
+        // DynamicArray
+        List<GameObject> gameObjects = new List<GameObject>();
 
         public void Instanciate(GameObject gameObject)
         {
-            gameObjects[useGameObjectCount] = gameObject;
-            useGameObjectCount++;
+            gameObjects.Add(gameObject);
         }
 
         internal void Update()
         {
-            for (int i = 0; i < gameObjects.Length; i++)
+            for (int i = 0; i < gameObjects.Count; i++)
             {
                 gameObjects[i].Update();
             }
@@ -27,9 +26,25 @@ namespace L20250217
 
         internal void Rander()
         {
-            for (int i = 0; i < gameObjects.Length; i++)
+            for (int i = 0; i < gameObjects.Count; i++)
             {
                 gameObjects[i].Rander();
+            }
+        }
+
+        public void Sort()
+        {
+            for(int i = 0;i < gameObjects.Count;i++)
+            {
+                for (int j = 0; j < gameObjects.Count; j++)
+                {
+                    if (gameObjects[i].orderlayer -  gameObjects[j].orderlayer > 0)
+                    {
+                        GameObject temp = gameObjects[i];
+                        gameObjects[i] = gameObjects[j];
+                        gameObjects[j] = temp;
+                    }
+                }
             }
         }
     }

@@ -11,6 +11,7 @@ namespace L20250217
         public int X; // X좌표
         public int Y; // Y좌표
         public char Shape; // Mesh, Sprite
+        public int orderlayer;
 
         public virtual void Update()
         {

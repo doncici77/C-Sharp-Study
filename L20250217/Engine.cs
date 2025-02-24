@@ -63,8 +63,8 @@ namespace L20250217
                     }
                     else if(scene[y][x] == ' ')
                     {
-                        Floor floor = new Floor(x, y, scene[y][x]);
-                        world.Instanciate(floor);// 만든거 등록
+                        //Floor floor = new Floor(x, y, scene[y][x]);
+                        //world.Instanciate(floor);// 만든거 등록
                     }
                     else if(scene[y][x] == 'P')
                     {
@@ -81,9 +81,13 @@ namespace L20250217
                         Goal goal = new Goal(x, y, scene[y][x]);
                         world.Instanciate(goal);
                     }
-
+                    Floor floor = new Floor(x, y, scene[y][x]);
+                    world.Instanciate(floor);
                 }
             }
+            // loading cpmplete
+            // sort
+            world.Sort();
         }
 
         public void ProcessInput()
