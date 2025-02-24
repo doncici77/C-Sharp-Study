@@ -11,6 +11,14 @@ namespace L20250217
         // DynamicArray
         List<GameObject> gameObjects = new List<GameObject>();
 
+        public List<GameObject> GetAllGameObjects
+        {
+            get
+            {
+                return gameObjects;
+            }
+        }
+
         public void Instanciate(GameObject gameObject)
         {
             gameObjects.Add(gameObject);
@@ -34,9 +42,11 @@ namespace L20250217
 
         public void Sort()
         {
+            //gameObjects.Sort();
+
             for(int i = 0;i < gameObjects.Count;i++)
             {
-                for (int j = 0; j < gameObjects.Count; j++)
+                for (int j = i + 1; j < gameObjects.Count; j++)
                 {
                     if (gameObjects[i].orderlayer -  gameObjects[j].orderlayer > 0)
                     {

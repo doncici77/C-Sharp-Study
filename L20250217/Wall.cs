@@ -14,6 +14,7 @@ namespace L20250217
             Y = inY;
             Shape = inShape;
             orderlayer = 2;
+            isCollide = true;
         }
     }
 }

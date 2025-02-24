@@ -14,6 +14,7 @@ namespace L20250217
             Y = inY;
             Shape = inShape;
             orderlayer = 5;
+            isTrigger = true;
         }
 
         public Random random = new Random();
@@ -30,25 +31,31 @@ namespace L20250217
             switch(count)
             {
                 case 0:
-                    if(X > 0)
+                    if (!PredictCollision(X - 1, Y))
                     {
                         X--;
                     }
                     break;
 
                 case 1:
-                    X++;
+                    if (!PredictCollision(X + 1, Y))
+                    {
+                        X++;
+                    }
                     break;
 
                 case 2:
-                    if (X > 0)
+                    if (!PredictCollision(X, Y - 1))
                     {
                         Y--;
                     }
                     break;
 
                 case 3:
-                    Y++;
+                    if (!PredictCollision(X, Y + 1))
+                    {
+                        Y++;
+                    }
                     break;
 
                 default:

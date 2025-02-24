@@ -18,7 +18,7 @@ namespace L20250217
 
         /*public override void Rander()
         {
-            
+
         }*/
     }
 }
