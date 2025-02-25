@@ -15,7 +15,10 @@ namespace L20250217
 
         static public void Process()
         {
-            keyInfo = Console.ReadKey();
+            if(Console.KeyAvailable) // 키 입력이 있을때 true
+            {
+                keyInfo = Console.ReadKey();
+            }
         }
 
         static protected ConsoleKeyInfo keyInfo; // 키보드 입력을 받기 위한 변수

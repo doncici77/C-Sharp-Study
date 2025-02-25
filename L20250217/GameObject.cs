@@ -36,8 +36,10 @@ namespace L20250217
         public virtual void Rander() 
         {
             // X,Y 위치에 Shape 출력
-            Console.SetCursorPosition(X, Y);
-            Console.WriteLine(Shape);
+            //Console.SetCursorPosition(X, Y);
+            //Console.WriteLine(Shape);
+
+            Engine.backBuffer[Y, X] = Shape; // 백버퍼의 좌표값에 모양을 저장 // 그리는것은 아님.
         }
     }
 }
