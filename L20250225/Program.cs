@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace L20250225
 {
-    class DynamicArray<T> : IEnumerable<T>
+    public class DynamicArray<T> : IEnumerable<T>, IEnumerable
     {
         protected T[] data;
         protected int count;
@@ -38,7 +38,7 @@ namespace L20250225
 
         public IEnumerator GetEnumerator()
         {
-            for(int i = 0;  i < data.Length; i++)
+            for (int i = 0; i < count; ++i)
             {
                 yield return data[i];
             }
@@ -46,30 +46,9 @@ namespace L20250225
 
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
-            for (int i = 0; i < data.Length; i++)
+            for (int i = 0; i < count; ++i)
             {
                 yield return data[i];
-            }
-        }
-
-        public T this[int index]
-        {
-            get
-            {
-                return data[index];
-            }
-
-            set
-            {
-                data[index] = value;
-            }
-        }
-
-        public int Count
-        {
-            get
-            {
-                return count;
             }
         }
     }
@@ -294,9 +273,6 @@ namespace L20250225
             dynamicArray.Add(3);
             dynamicArray.Add(4);
 
-            Console.WriteLine(dynamicArray.GetEnumerator());
-
-            dynamicArray.RemoveAt(11);
             foreach (int value in dynamicArray)
             {
                 Console.WriteLine(value);
