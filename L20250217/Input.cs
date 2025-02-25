@@ -17,7 +17,7 @@ namespace L20250217
         {
             if(Console.KeyAvailable) // 키 입력이 있을때 true
             {
-                keyInfo = Console.ReadKey();
+                keyInfo = Console.ReadKey(true);
             }
         }
 
@@ -26,6 +26,11 @@ namespace L20250217
         static public bool GetKeyDown(ConsoleKey key)
         {
             return (keyInfo.Key == key);
+        }
+
+        public static void ClearInput()
+        {
+            keyInfo = new ConsoleKeyInfo();
         }
     }
 }

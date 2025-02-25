@@ -19,6 +19,8 @@ namespace L20250217
 
         public Random random = new Random();
 
+        private float elapsedTime = 0;
+
         public override void Update()
         {
             Move();
@@ -26,41 +28,46 @@ namespace L20250217
 
         public void Move()
         {
-            int count = random.Next(0, 4);
-            
-            switch(count)
+            if (elapsedTime > 500f)
             {
-                case 0:
-                    if (!PredictCollision(X - 1, Y))
-                    {
-                        X--;
-                    }
-                    break;
+                int count = random.Next(0, 4);
 
-                case 1:
-                    if (!PredictCollision(X + 1, Y))
-                    {
-                        X++;
-                    }
-                    break;
+                switch (count)
+                {
+                    case 0:
+                        if (!PredictCollision(X - 1, Y))
+                        {
+                            X--;
+                        }
+                        break;
 
-                case 2:
-                    if (!PredictCollision(X, Y - 1))
-                    {
-                        Y--;
-                    }
-                    break;
+                    case 1:
+                        if (!PredictCollision(X + 1, Y))
+                        {
+                            X++;
+                        }
+                        break;
 
-                case 3:
-                    if (!PredictCollision(X, Y + 1))
-                    {
-                        Y++;
-                    }
-                    break;
+                    case 2:
+                        if (!PredictCollision(X, Y - 1))
+                        {
+                            Y--;
+                        }
+                        break;
 
-                default:
-                    break;
+                    case 3:
+                        if (!PredictCollision(X, Y + 1))
+                        {
+                            Y++;
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+                elapsedTime = 0;
             }
+            elapsedTime += Time.deltaTime;
         }
     }
 }
