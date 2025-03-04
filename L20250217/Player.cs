@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SDL2;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,11 +16,15 @@ namespace L20250217
             Shape = inShape;
             orderlayer = 4;
             isTrigger = true;
+
+            color.r = 0;
+            color.g = 0;
+            color.b = 255;
         }
 
         public override void Update()
         {
-            if(Input.GetKeyDown(ConsoleKey.A) || Input.GetKeyDown(ConsoleKey.LeftArrow)) // a를 눌렀을때
+            if(Input.GetKeyDown(SDL.SDL_Keycode.SDLK_a) || Input.GetKeyDown(SDL.SDL_Keycode.SDLK_LEFT)) // a를 눌렀을때
             {
                 if(!PredictCollision(X - 1, Y))
                 {
@@ -27,21 +32,21 @@ namespace L20250217
                 }
 
             }
-            else if(Input.GetKeyDown(ConsoleKey.D) || Input.GetKeyDown(ConsoleKey.RightArrow))
+            else if(Input.GetKeyDown(SDL.SDL_Keycode.SDLK_d) || Input.GetKeyDown(SDL.SDL_Keycode.SDLK_RIGHT))
             {
                 if (!PredictCollision(X + 1, Y))
                 {
                     X++;
                 }
             }
-            else if (Input.GetKeyDown(ConsoleKey.W) || Input.GetKeyDown(ConsoleKey.UpArrow))
+            else if (Input.GetKeyDown(SDL.SDL_Keycode.SDLK_w) || Input.GetKeyDown(SDL.SDL_Keycode.SDLK_UP))
             {
                 if (!PredictCollision(X, Y - 1))
                 {
                     Y--;
                 }
             }
-            else if (Input.GetKeyDown(ConsoleKey.S) || Input.GetKeyDown(ConsoleKey.DownArrow))
+            else if (Input.GetKeyDown(SDL.SDL_Keycode.SDLK_s) || Input.GetKeyDown(SDL.SDL_Keycode.SDLK_DOWN))
             {
                 if (!PredictCollision(X, Y + 1))
                 {

@@ -28,6 +28,7 @@ namespace SDL_Sample
 
             // 메세지 처리(사용자 처리가 추가 구조를 바꿈)
             SDL.SDL_Event myEvent;
+
             bool isRunning = true;
 
             #region 사각형 데이터 세팅

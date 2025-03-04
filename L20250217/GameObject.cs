@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SDL2;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,9 @@ namespace L20250217
         public int orderlayer;
         public bool isTrigger = false;
         public bool isCollide = false;
+
+        public SDL.SDL_Color color;
+        public int spriteSize = 30;
 
         public bool PredictCollision(int newX, int newY)
         {
@@ -40,6 +44,17 @@ namespace L20250217
             //Console.WriteLine(Shape);
 
             Engine.backBuffer[Y, X] = Shape; // 백버퍼의 좌표값에 모양을 저장 // 그리는것은 아님.
+
+            SDL.SDL_SetRenderDrawColor(Engine.Instance.myRenderer, color.r, color.g, color.b, color.a);
+            // SDL.SDL_RenderDrawPoint(Engine.Instance.myRenderer, X, Y);
+            SDL.SDL_Rect myRect;
+
+            myRect.x = X * spriteSize;
+            myRect.y = Y * spriteSize;
+            myRect.w = spriteSize;
+            myRect.h = spriteSize;
+
+            SDL.SDL_RenderFillRect(Engine.Instance.myRenderer, ref myRect);
         }
     }
 }

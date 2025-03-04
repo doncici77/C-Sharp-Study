@@ -42,10 +42,13 @@ namespace L20250217
         }
         static void Main(string[] args)
         {
-            Engine.Instance.Load("level02.map");
+            Engine.Instance.Init();
 
+            Engine.Instance.Load("level01.map");
             Engine.Instance.Run();
 
+            Engine.Instance.Quit();
+                
             /*// 에외 처리 예시
             StreamReader sr = null;
 

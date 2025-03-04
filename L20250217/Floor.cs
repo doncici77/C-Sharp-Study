@@ -14,6 +14,10 @@ namespace L20250217
             Y = inY;
             Shape = inShape;
             orderlayer = 1;
+
+            color.r = 0;
+            color.g = 0;
+            color.b = 0;
         }
 
         /*public override void Rander()
