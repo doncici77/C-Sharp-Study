@@ -104,6 +104,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 185}
+  - component: {fileID: 186}
+  - component: {fileID: 187}
   m_Layer: 0
   m_Name: Player
   m_TagString: MyPlane
@@ -163,6 +165,33 @@ Transform:
   - {fileID: 391645779}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 46}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 336be37ccdc006f4dae796a3863cf9c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Speed: 30
+--- !u!114 &187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 46}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1713f20be8ca30a4d8dd118450cacc2b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rollingSpeed: 60
+  pitchingSpeed: 50
 --- !u!4 &280
 Transform:
   m_ObjectHideFlags: 0
@@ -387,11 +416,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 5597a77dcea675d45b335047df5240f4, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.84910583
+      value: -1.8491058
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 5597a77dcea675d45b335047df5240f4, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -3.19549561
+      value: -3.1954956
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 5597a77dcea675d45b335047df5240f4, type: 3}
       propertyPath: m_LocalRotation.w
@@ -423,6 +452,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 188421580}
+  - component: {fileID: 188421581}
   m_Layer: 0
   m_Name: CameraRig
   m_TagString: Untagged
@@ -446,6 +476,20 @@ Transform:
   - {fileID: 1572433551}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &188421581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 188421579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9375da5ff1326bf4fb340a4fd5ff95a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  positionLagTime: 1
+  rotationLagTime: 1
 --- !u!4 &391645779 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 5597a77dcea675d45b335047df5240f4, type: 3}

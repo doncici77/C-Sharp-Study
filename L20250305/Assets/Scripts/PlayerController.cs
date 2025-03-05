@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
 
-        transform.Translate(Vector3.up * v * moveSpeed * Time.deltaTime, Space.Self);
+        transform.Translate(Vector3.forward * v * moveSpeed * Time.deltaTime, Space.Self);
         transform.Rotate(Vector3.forward * -h * rotateSpeed * Time.deltaTime, Space.Self);
 
         if(Input.GetKeyDown(KeyCode.Space))
