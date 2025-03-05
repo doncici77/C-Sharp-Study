@@ -11,6 +11,11 @@ public class CameraController : MonoBehaviour
     public float smoothTime = 0.3f;
     public float angleSmoothTime = 0.3f;
 
+    public bool isRotationRig = false;
+    public bool isPositionRig = false;
+
+    public Quaternion saveRotation;
+
     void Start()
     {
         playerPos = GameObject.FindGameObjectWithTag("MyPlane").transform;
@@ -19,10 +24,43 @@ public class CameraController : MonoBehaviour
     void LateUpdate()
     {
         //transform.position = Vector3.Lerp(transform.position, playerPos.position, Time.deltaTime * positionLagTime);
-        transform.position = Vector3.SmoothDamp(transform.position, playerPos.position, ref currnetVelocity, smoothTime);
+        if(isPositionRig)
+        {
+            transform.position = Vector3.SmoothDamp(transform.position, playerPos.position, ref currnetVelocity, smoothTime);
+        }
+        else
+        {
+            transform.position = playerPos.position;
+        }
+        
         //transform.rotation = Quaternion.Lerp(transform.rotation, playerPos.rotation, Time.deltaTime * rotationLagTime);
-        transform.rotation = CameraController.SmoothDamp(transform.rotation, playerPos.rotation, ref currentRotation, angleSmoothTime);
+        if(isRotationRig)
+        {
+            transform.rotation = CameraController.SmoothDamp(transform.rotation, playerPos.rotation, ref currentRotation, angleSmoothTime);
+        }
         Debug.DrawLine(transform.position, Camera.main.transform.position, UnityEngine.Color.red);
+
+        if(Input.GetButtonDown("Camera"))
+        {
+            Debug.Log("¿˙¿Â");
+            saveRotation = transform.rotation;
+        }
+
+        if (Input.GetButtonUp("Camera"))
+        {
+            transform.rotation = saveRotation;
+        }
+
+        if (Input.GetButton("Camera"))
+        {
+            transform.Rotate(new Vector3(0, Input.mousePositionDelta.x, 0) * 180.0f * Time.deltaTime);
+        }
+
+        float wheelDelta = Input.GetAxisRaw("Mouse ScrollWheel");
+
+        Vector3 moveDirection = playerPos.position - Camera.main.transform.position;
+        Camera.main.transform.Translate(moveDirection.normalized * Time.deltaTime * wheelDelta * 200.0f);
+
     }
 
     public static Quaternion SmoothDamp(Quaternion rot, Quaternion target, ref Quaternion deriv, float time)
