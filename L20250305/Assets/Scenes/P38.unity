@@ -488,8 +488,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9375da5ff1326bf4fb340a4fd5ff95a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  positionLagTime: 1
-  rotationLagTime: 1
+  positionLagTime: 4.5
+  rotationLagTime: 2
 --- !u!4 &391645779 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 5597a77dcea675d45b335047df5240f4, type: 3}
