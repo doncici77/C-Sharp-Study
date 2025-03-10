@@ -5,11 +5,13 @@ namespace L20250217
 {
     public class GameObject
     {
-        List<Component> components = new List<Component>();
+        public List<Component> components = new List<Component>();
 
-        string Name;
+        public string Name;
 
         protected static int gameObjectCount = 0;
+
+        public Transform transform;
 
         public GameObject()
         {
@@ -26,13 +28,14 @@ namespace L20250217
         public T AddComponent<T>(T inComponent) where T : Component
         {
             components.Add(inComponent);
+            inComponent.gameObject = this;
 
             return inComponent;
         }
 
         public void Init()
         {
-            AddComponent<Transform>(new Transform());
+            transform = AddComponent<Transform>(new Transform());
         }
 
         public bool PredictCollision(int newX, int newY)
@@ -47,6 +50,19 @@ namespace L20250217
                 }
             }*/
             return false;
+        }
+
+        public T GetComponent<T>() where T : Component
+        {
+            foreach (Component component in components)
+            {
+                if (component is T)
+                {
+                    return component as T;
+                }
+            }
+
+            return null;
         }
 
         public virtual void Update()

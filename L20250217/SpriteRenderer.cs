@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace L20250217
 {
-    class SpriteRenderer : Component
+    public class SpriteRenderer : Component
     {
         public int orderlayer;
 
@@ -22,64 +22,45 @@ namespace L20250217
         protected int spriteIndexX = 0;
         protected int spriteIndexY = 0;
 
-        protected SDL.SDL_Color colorKey;
+        public SDL.SDL_Color colorKey;
 
         protected string filename;
 
         private float elapsedTime = 0;
+        public float preocessTime = 100.0f;
+
+        public int maxCellCountX = 5;
+        public int maxCellCountY = 5;
+
+        SDL.SDL_Rect sourceRect; // 원본 이미지
+        SDL.SDL_Rect destinationRect;
 
         public SpriteRenderer()
         {
 
         }
 
-        public SpriteRenderer(string infilename, bool inIsAnimation = false)
-        {
-            LoadBmp(infilename);
-            isAnimation = inIsAnimation;
-        }
-
         public override void Update()
         {
+            int X = gameObject.transform.X;
+            int Y = gameObject.transform.Y;
 
-        }
+            destinationRect.x = X * spriteSize;
+            destinationRect.y = Y * spriteSize;
+            destinationRect.w = spriteSize;
+            destinationRect.h = spriteSize;
 
-        public virtual void Rander()
-        {
-            int X = 0;
-            int Y = 0;
-
-            // 모든 컴포넌트중에 그리는 애만 호출 해줘
-            // X,Y 위치에 Shape 출력
-            //Console.SetCursorPosition(X, Y);
-            //Console.WriteLine(Shape);
-
-            Engine.backBuffer[Y, X] = Shape; // 백버퍼의 좌표값에 모양을 저장 // 그리는것은 아님.
-
-            // SDL.SDL_SetRenderDrawColor(Engine.Instance.myRenderer, color.r, color.g, color.b, color.a);
-            // SDL.SDL_RenderDrawPoint(Engine.Instance.myRenderer, X, Y);
-
-
-            SDL.SDL_Rect myRect;
-            myRect.x = X * spriteSize;
-            myRect.y = Y * spriteSize;
-            myRect.w = spriteSize;
-            myRect.h = spriteSize;
-
-            // SDL.SDL_RenderFillRect(Engine.Instance.myRenderer, ref myRect);
             unsafe
             {
                 // 이미지 정보 가져와서 할일이 있음.
                 SDL.SDL_Surface* surface = (SDL.SDL_Surface*)(mySurface);
 
-                SDL.SDL_Rect sourceRect; // 이미지
-
                 if (isAnimation)
                 {
-                    if (elapsedTime >= 100.0f)
+                    if (elapsedTime >= preocessTime)
                     {
                         spriteIndexX++;
-                        spriteIndexX = spriteIndexX % 5;
+                        spriteIndexX = spriteIndexX % maxCellCountX;
                         elapsedTime = 0;
                     }
                     else
@@ -87,8 +68,8 @@ namespace L20250217
                         elapsedTime += Time.deltaTime;
                     }
 
-                    int cellsizeX = surface->w / 5;
-                    int cellsizeY = surface->h / 5;
+                    int cellsizeX = surface->w / maxCellCountX;
+                    int cellsizeY = surface->h / maxCellCountY;
                     sourceRect.x = cellsizeX * spriteIndexX;
                     sourceRect.y = cellsizeY * spriteIndexY;
                     sourceRect.w = cellsizeX;
@@ -101,15 +82,29 @@ namespace L20250217
                     sourceRect.w = surface->w;
                     sourceRect.h = surface->h;
                 }
-
-                SDL.SDL_RenderCopy(Engine.Instance.myRenderer, myTexture, ref sourceRect, ref myRect);
             }
         }
 
-        public void LoadBmp(string filename)
+        public virtual void Rander()
         {
+            int X = gameObject.transform.X;
+            int Y = gameObject.transform.Y;
+
+            Engine.backBuffer[Y, X] = Shape; // 백버퍼의 좌표값에 모양을 저장 // 그리는것은 아님.
+
+            unsafe
+            {
+                SDL.SDL_RenderCopy(Engine.Instance.myRenderer, myTexture, ref sourceRect, ref destinationRect);
+            }
+        }
+
+        public void LoadBmp(string filename, bool inIsAnimation = false)
+        {
+            string projectFolder = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
+            isAnimation = inIsAnimation;
+
             // SDL C, 접근 할 수 있는게 없어거 unsafe 사용
-            mySurface = SDL.SDL_LoadBMP(filename);
+            mySurface = SDL.SDL_LoadBMP(projectFolder + "/data/" + filename);
 
             unsafe
             {

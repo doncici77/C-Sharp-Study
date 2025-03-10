@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace L20250217
 {
-    class Transform : Component
+    public class Transform : Component
     {
         public int X; // X좌표
         public int Y; // Y좌표
