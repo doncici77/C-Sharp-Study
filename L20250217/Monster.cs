@@ -19,6 +19,8 @@ namespace L20250217
             color.r = 100;
             color.g = 100;
             color.b = 100;
+
+            LoadBmp("data/monster.bmp");
         }
 
         public Random random = new Random();

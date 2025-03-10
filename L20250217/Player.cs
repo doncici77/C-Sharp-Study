@@ -20,6 +20,8 @@ namespace L20250217
             color.r = 0;
             color.g = 0;
             color.b = 255;
+
+            LoadBmp("data/player.bmp");
         }
 
         public override void Update()
