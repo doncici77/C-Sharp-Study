@@ -83,6 +83,7 @@ namespace L20250217
         }
         static void Main(string[] args)
         {
+            /*// 리플렉션 예시
             Data d = new Data();
             Type classType = d.GetType();
 
@@ -121,14 +122,14 @@ namespace L20250217
             foreach (PropertyInfo propertyInfo in propertyInfos)
             {
                 Console.WriteLine($"{propertyInfo.Name} , {propertyInfo.GetValue(d)}");
-            }
+            }*/
 
-            /*Engine.Instance.Init();
+            Engine.Instance.Init();
 
             Engine.Instance.Load("level01.map");
             Engine.Instance.Run();
 
-            Engine.Instance.Quit();*/
+            Engine.Instance.Quit();
 
             /*// 에외 처리 예시
             StreamReader sr = null;

@@ -10,7 +10,7 @@ namespace L20250217
     {
         public Goal(int inX, int inY, char inShape)
         {
-            X = inX;
+            /*X = inX;
             Y = inY;
             Shape = inShape;
             orderlayer = 3;
@@ -20,7 +20,7 @@ namespace L20250217
             color.g = 255;
             color.b = 0;
 
-            LoadBmp("data/goal.bmp");
+            LoadBmp("data/goal.bmp");*/
         }
     }
 }

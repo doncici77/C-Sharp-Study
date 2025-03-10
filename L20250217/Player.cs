@@ -11,7 +11,7 @@ namespace L20250217
     {
         public Player(int inX, int inY, char inShape)
         {
-            X = inX;
+            /*X = inX;
             Y = inY;
             Shape = inShape;
             orderlayer = 4;
@@ -28,12 +28,12 @@ namespace L20250217
 
             isAnimation = true;
 
-            LoadBmp("data/player.bmp");
+            LoadBmp("data/player.bmp");*/
         }
 
         public override void Update()
         {
-            if(Input.GetKeyDown(SDL.SDL_Keycode.SDLK_a) || Input.GetKeyDown(SDL.SDL_Keycode.SDLK_LEFT)) // a를 눌렀을때
+            /*if(Input.GetKeyDown(SDL.SDL_Keycode.SDLK_a) || Input.GetKeyDown(SDL.SDL_Keycode.SDLK_LEFT)) // a를 눌렀을때
             {
                 if(!PredictCollision(X - 1, Y))
                 {
@@ -65,7 +65,7 @@ namespace L20250217
                     Y++;
                     spriteIndexY = 3;
                 }
-            }
+            }*/
         }
 
     }

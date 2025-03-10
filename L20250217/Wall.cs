@@ -10,7 +10,7 @@ namespace L20250217
     {
         public Wall(int inX, int inY, char inShape)
         {
-            X = inX;
+            /*X = inX;
             Y = inY;
             Shape = inShape;
             orderlayer = 2;
@@ -20,7 +20,7 @@ namespace L20250217
             color.g = 0;
             color.b = 0;
 
-            LoadBmp("data/wall.bmp");
+            LoadBmp("data/wall.bmp");*/
         }
     }
 }

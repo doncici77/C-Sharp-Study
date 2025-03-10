@@ -10,7 +10,7 @@ namespace L20250217
     {
         public Monster(int inX, int inY, char inShape)
         {
-            X = inX;
+           /* X = inX;
             Y = inY;
             Shape = inShape;
             orderlayer = 5;
@@ -20,7 +20,7 @@ namespace L20250217
             color.g = 100;
             color.b = 100;
 
-            LoadBmp("data/monster.bmp");
+            LoadBmp("data/monster.bmp");*/
         }
 
         public Random random = new Random();
@@ -34,7 +34,7 @@ namespace L20250217
 
         public void Move()
         {
-            if (elapsedTime > 500f)
+            /*if (elapsedTime > 500f)
             {
                 int count = random.Next(0, 4);
 
@@ -73,7 +73,7 @@ namespace L20250217
                 }
                 elapsedTime = 0;
             }
-            elapsedTime += Time.deltaTime;
+            elapsedTime += Time.deltaTime;*/
         }
     }
 }

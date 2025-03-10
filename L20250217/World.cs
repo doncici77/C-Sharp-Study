@@ -34,17 +34,17 @@ namespace L20250217
 
         internal void Rander()
         {
-            for (int i = 0; i < gameObjects.Count; i++)
+            /*for (int i = 0; i < gameObjects.Count; i++)
             {
                 gameObjects[i].Rander();
-            }
+            }*/
         }
 
         public void Sort()
         {
             //gameObjects.Sort();
 
-            for(int i = 0;i < gameObjects.Count;i++)
+            /*for(int i = 0;i < gameObjects.Count;i++)
             {
                 for (int j = i + 1; j < gameObjects.Count; j++)
                 {
@@ -55,7 +55,7 @@ namespace L20250217
                         gameObjects[j] = temp;
                     }
                 }
-            }
+            }*/
         }
     }
 }
