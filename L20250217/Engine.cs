@@ -125,6 +125,7 @@ namespace L20250217
 
                         SpriteRenderer spriteRenderer = wall.AddComponent<SpriteRenderer>(new SpriteRenderer());
                         spriteRenderer.LoadBmp("wall.bmp");
+                        spriteRenderer.orderlayer = 1;
 
                         spriteRenderer.Shape = '*';
 
@@ -132,15 +133,7 @@ namespace L20250217
                     }
                     else if (scene[y][x] == ' ')
                     {
-                        GameObject floor = new GameObject();
-                        floor.Name = "Floor";
-                        floor.transform.X = x;
-                        floor.transform.Y = y;
 
-                        SpriteRenderer spriteRenderer = floor.AddComponent<SpriteRenderer>(new SpriteRenderer());
-                        spriteRenderer.LoadBmp("floor.bmp");
-
-                        spriteRenderer.Shape = ' ';
                     }
                     else if (scene[y][x] == 'P')
                     {
@@ -160,6 +153,7 @@ namespace L20250217
                         spriteRenderer.LoadBmp("player.bmp", true);
                         spriteRenderer.preocessTime = 150.0f;
                         spriteRenderer.maxCellCountX = 7;
+                        spriteRenderer.orderlayer = 3;
 
                         spriteRenderer.Shape = 'P';
 
@@ -179,6 +173,7 @@ namespace L20250217
                         spriteRenderer.colorKey.b = 255;
                         spriteRenderer.colorKey.a = 255;
                         spriteRenderer.LoadBmp("monster.bmp");
+                        spriteRenderer.orderlayer = 4;
 
                         spriteRenderer.Shape = 'M';
 
@@ -197,10 +192,27 @@ namespace L20250217
                         spriteRenderer.colorKey.b = 255;
                         spriteRenderer.colorKey.a = 255;
                         spriteRenderer.LoadBmp("goal.bmp");
+                        spriteRenderer.orderlayer = 2;
 
                         spriteRenderer.Shape = 'G';
 
                         world.Instanciate(goal);
+                    }
+
+                    if(true)
+                    {
+                        GameObject floor = new GameObject();
+                        floor.Name = "Floor";
+                        floor.transform.X = x;
+                        floor.transform.Y = y;
+
+                        SpriteRenderer spriteRenderer = floor.AddComponent<SpriteRenderer>(new SpriteRenderer());
+                        spriteRenderer.LoadBmp("floor.bmp");
+                        spriteRenderer.orderlayer = 0;
+
+                        spriteRenderer.Shape = ' ';
+
+                        world.Instanciate(floor);
                     }
                 }
             }

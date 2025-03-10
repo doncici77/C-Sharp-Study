@@ -51,18 +51,19 @@ namespace L20250217
         {
             //gameObjects.Sort();
 
-            /*for(int i = 0;i < gameObjects.Count;i++)
+            for (int i = 0; i < gameObjects.Count; i++)
             {
                 for (int j = i + 1; j < gameObjects.Count; j++)
                 {
-                    if (gameObjects[i].orderlayer -  gameObjects[j].orderlayer > 0)
+                    if (gameObjects[i].GetComponent<SpriteRenderer>().orderlayer -
+                        gameObjects[j].GetComponent<SpriteRenderer>().orderlayer > 0)
                     {
                         GameObject temp = gameObjects[i];
                         gameObjects[i] = gameObjects[j];
                         gameObjects[j] = temp;
                     }
                 }
-            }*/
+            }
         }
     }
 }
