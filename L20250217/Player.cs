@@ -38,6 +38,7 @@ namespace L20250217
                 if(!PredictCollision(X - 1, Y))
                 {
                     X--;
+                    spriteIndexY = 0;
                 }
 
             }
@@ -46,6 +47,7 @@ namespace L20250217
                 if (!PredictCollision(X + 1, Y))
                 {
                     X++;
+                    spriteIndexY = 1;
                 }
             }
             else if (Input.GetKeyDown(SDL.SDL_Keycode.SDLK_w) || Input.GetKeyDown(SDL.SDL_Keycode.SDLK_UP))
@@ -53,6 +55,7 @@ namespace L20250217
                 if (!PredictCollision(X, Y - 1))
                 {
                     Y--;
+                    spriteIndexY = 2;
                 }
             }
             else if (Input.GetKeyDown(SDL.SDL_Keycode.SDLK_s) || Input.GetKeyDown(SDL.SDL_Keycode.SDLK_DOWN))
@@ -60,6 +63,7 @@ namespace L20250217
                 if (!PredictCollision(X, Y + 1))
                 {
                     Y++;
+                    spriteIndexY = 3;
                 }
             }
         }

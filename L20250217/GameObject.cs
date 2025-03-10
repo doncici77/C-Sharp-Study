@@ -28,6 +28,8 @@ namespace L20250217
 
         protected SDL.SDL_Color colorKey;
 
+        private float elapsedTime = 0;
+
         public GameObject()
         {
             colorKey.r = 255;
@@ -82,14 +84,23 @@ namespace L20250217
 
                 if (isAnimation)
                 {
+                    if(elapsedTime >= 100.0f)
+                    {
+                        spriteIndexX++;
+                        spriteIndexX = spriteIndexX % 5;
+                        elapsedTime = 0;
+                    }
+                    else
+                    {
+                        elapsedTime += Time.deltaTime;
+                    }
+
                     int cellsizeX = surface->w / 5;
                     int cellsizeY = surface->h / 5;
                     sourceRect.x = cellsizeX * spriteIndexX;
                     sourceRect.y = cellsizeY * spriteIndexY;
                     sourceRect.w = cellsizeX;
                     sourceRect.h = cellsizeY;
-                    spriteIndexX++;
-                    spriteIndexX = spriteIndexX % 5;
                 }
                 else
                 {
