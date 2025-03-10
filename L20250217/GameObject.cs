@@ -1,14 +1,12 @@
 ﻿using SDL2;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace L20250217
 {
     public class GameObject
     {
+        List<Component> components = new List<Component>();
+
         public int X; // X좌표
         public int Y; // Y좌표
         public char Shape; // Mesh, Sprite
@@ -38,6 +36,13 @@ namespace L20250217
             colorKey.a = 255;
         }
 
+        public T AddComponent<T>(T inComponent) where T : Component
+        {
+            components.Add(inComponent);
+
+            return inComponent;
+        }
+
         public bool PredictCollision(int newX, int newY)
         {
             for (int i = 0; i < Engine.Instance.world.GetAllGameObjects.Count; i++)
@@ -54,10 +59,11 @@ namespace L20250217
 
         public virtual void Update()
         {
-
+            // 모든 컴포넌트의 update 함수 실행해줘.
         }
         public virtual void Rander() 
         {
+            // 모든 컴포넌트중에 그리는 애만 호출 해줘
             // X,Y 위치에 Shape 출력
             //Console.SetCursorPosition(X, Y);
             //Console.WriteLine(Shape);
