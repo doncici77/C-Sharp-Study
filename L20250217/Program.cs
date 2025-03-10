@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Reflection;
+using System.Text;
 
 namespace L20250217
 {
@@ -40,15 +41,95 @@ namespace L20250217
                 }
             }
         }
+
+        class Data
+        {
+            public void Count()
+            {
+                Console.WriteLine("Count");
+            }
+
+            private void FuncA()
+            {
+                Console.WriteLine("private");
+            }
+
+            protected void Sum()
+            {
+                Console.WriteLine("protected");
+            }
+
+            public static void StaticFunction()
+            {
+                Console.WriteLine("StaticFunction StaticFunction");
+            }
+
+            public static void Add(int A, int B)
+            {
+                Console.WriteLine($"{A} + {B} = {A + B}");
+            }
+
+            public int Gold = 1;
+
+            protected int Money = -1000;
+
+            private float Hp = -10.5f;
+
+            public int MP
+            {
+                get;
+                set;
+            }
+        }
         static void Main(string[] args)
         {
-            Engine.Instance.Init();
+            Data d = new Data();
+            Type classType = d.GetType();
+
+            Console.WriteLine(classType.Name);
+
+            MethodInfo[] methods = classType.GetMethods(BindingFlags.Public |
+                BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+
+            foreach (MethodInfo info in methods)
+            {
+                //Console.WriteLine($"{info.Name}");
+                if (info.Name.CompareTo("Add") == 0)
+                {
+                    ParameterInfo[] paramInfos = info.GetParameters();
+                    foreach (ParameterInfo paramInfo in paramInfos)
+                    {
+                        Console.WriteLine(paramInfo.Name);
+                    }
+
+                    Object[] param = { 3, 5 };
+                    info.Invoke(d, param);
+                }
+            }
+
+            FieldInfo[] fields = classType.GetFields(BindingFlags.Public |
+                BindingFlags.NonPublic | BindingFlags.Instance);
+            foreach (FieldInfo field in fields)
+            {
+                Console.WriteLine($"{field.FieldType} , {field.Name} , {field.GetValue(d)}");
+                field.SetValue(d, 10);
+                Console.WriteLine($"{field.FieldType} , {field.Name} , {field.GetValue(d)}");
+            }
+
+            PropertyInfo[] propertyInfos = classType.GetProperties(BindingFlags.Public |
+                BindingFlags.NonPublic | BindingFlags.Instance);
+            foreach (PropertyInfo propertyInfo in propertyInfos)
+            {
+                Console.WriteLine($"{propertyInfo.Name} , {propertyInfo.GetValue(d)}");
+            }
+
+            /*Engine.Instance.Init();
 
             Engine.Instance.Load("level01.map");
             Engine.Instance.Run();
 
-            Engine.Instance.Quit();
-                
+            Engine.Instance.Quit();*/
+
             /*// 에외 처리 예시
             StreamReader sr = null;
 
