@@ -19,8 +19,19 @@ namespace L20250217
         public SDL.SDL_Color color;
         public int spriteSize = 30;
 
-        IntPtr myTexture;
-        IntPtr mySurface;
+        protected bool isAnimation = false;
+        protected IntPtr myTexture;
+        protected IntPtr mySurface;
+
+        protected SDL.SDL_Color colorKey;
+
+        public GameObject()
+        {
+            colorKey.r = 255;
+            colorKey.g = 255;
+            colorKey.b = 255;
+            colorKey.a = 255;
+        }
 
         public bool PredictCollision(int newX, int newY)
         {
@@ -65,10 +76,21 @@ namespace L20250217
                 SDL.SDL_Surface* suface = (SDL.SDL_Surface*)(mySurface);
 
                 SDL.SDL_Rect sourceRect;
-                sourceRect.x = 0;
-                sourceRect.y = 0;
-                sourceRect.w = suface -> w;
-                sourceRect.h = suface -> h;
+
+                if (isAnimation)
+                {
+                    sourceRect.x = 0;
+                    sourceRect.y = 0;
+                    sourceRect.w = suface->w / 5;
+                    sourceRect.h = suface->h / 5;
+                }
+                else
+                {
+                    sourceRect.x = 0;
+                    sourceRect.y = 0;
+                    sourceRect.w = suface->w;
+                    sourceRect.h = suface->h;
+                }
 
                 SDL.SDL_RenderCopy(Engine.Instance.myRenderer, myTexture, ref sourceRect, ref myRect);
             }
@@ -83,7 +105,7 @@ namespace L20250217
             {
                 // 이미지 정보 가져와서 할일이 있음.
                 SDL.SDL_Surface* surface = (SDL.SDL_Surface*)(mySurface);
-                SDL.SDL_SetColorKey(mySurface, 1, SDL.SDL_MapRGB(surface->format, 255, 255, 255));
+                SDL.SDL_SetColorKey(mySurface, 1, SDL.SDL_MapRGB(surface->format, colorKey.r, colorKey.g, colorKey.b));
             }
 
             myTexture = SDL.SDL_CreateTextureFromSurface(Engine.Instance.myRenderer, mySurface);

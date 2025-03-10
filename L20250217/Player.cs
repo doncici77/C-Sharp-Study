@@ -21,6 +21,13 @@ namespace L20250217
             color.g = 0;
             color.b = 255;
 
+            colorKey.r = 255;
+            colorKey.g = 0;
+            colorKey.b = 255;
+            colorKey.a = 0;
+
+            isAnimation = true;
+
             LoadBmp("data/player.bmp");
         }
 
