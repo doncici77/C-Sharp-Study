@@ -23,6 +23,9 @@ namespace L20250217
         protected IntPtr myTexture;
         protected IntPtr mySurface;
 
+        protected int spriteIndexX = 0;
+        protected int spriteIndexY = 0;
+
         protected SDL.SDL_Color colorKey;
 
         public GameObject()
@@ -73,23 +76,27 @@ namespace L20250217
             unsafe
             {
                 // 이미지 정보 가져와서 할일이 있음.
-                SDL.SDL_Surface* suface = (SDL.SDL_Surface*)(mySurface);
+                SDL.SDL_Surface* surface = (SDL.SDL_Surface*)(mySurface);
 
-                SDL.SDL_Rect sourceRect;
+                SDL.SDL_Rect sourceRect; // 이미지
 
                 if (isAnimation)
                 {
-                    sourceRect.x = 0;
-                    sourceRect.y = 0;
-                    sourceRect.w = suface->w / 5;
-                    sourceRect.h = suface->h / 5;
+                    int cellsizeX = surface->w / 5;
+                    int cellsizeY = surface->h / 5;
+                    sourceRect.x = cellsizeX * spriteIndexX;
+                    sourceRect.y = cellsizeY * spriteIndexY;
+                    sourceRect.w = cellsizeX;
+                    sourceRect.h = cellsizeY;
+                    spriteIndexX++;
+                    spriteIndexX = spriteIndexX % 5;
                 }
                 else
                 {
                     sourceRect.x = 0;
                     sourceRect.y = 0;
-                    sourceRect.w = suface->w;
-                    sourceRect.h = suface->h;
+                    sourceRect.w = surface-> w;
+                    sourceRect.h = surface->h;
                 }
 
                 SDL.SDL_RenderCopy(Engine.Instance.myRenderer, myTexture, ref sourceRect, ref myRect);
