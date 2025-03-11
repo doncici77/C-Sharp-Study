@@ -25,17 +25,44 @@ namespace L20250217
             gameObjectCount--;
         }
 
-        public T AddComponent<T>(T inComponent) where T : Component
+        /// <summary>
+        /// 컴포넌트 추가 함수(초기화?)
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T AddComponent<T>(T inComponent) where T : Component, new()
         {
             components.Add(inComponent);
             inComponent.gameObject = this;
+            inComponent.transform = transform;
+            return inComponent;
+        }
+
+        public T AddComponent<T>() where T : Component, new()
+        {
+            T inComponent = new T();
+            AddComponent<T>(inComponent);
 
             return inComponent;
         }
 
         public void Init()
         {
-            transform = AddComponent<Transform>(new Transform());
+            transform = AddComponent<Transform>();
+            AddComponent<Transform>();
+        }
+
+        public T GetComponent<T>() where T : Component
+        {
+            foreach (Component component in components)
+            {
+                if (component is T)
+                {
+                    return component as T;
+                }
+            }
+
+            return null;
         }
 
         public bool PredictCollision(int newX, int newY)
@@ -50,19 +77,6 @@ namespace L20250217
                 }
             }*/
             return false;
-        }
-
-        public T GetComponent<T>() where T : Component
-        {
-            foreach (Component component in components)
-            {
-                if (component is T)
-                {
-                    return component as T;
-                }
-            }
-
-            return null;
         }
 
         public virtual void Update()

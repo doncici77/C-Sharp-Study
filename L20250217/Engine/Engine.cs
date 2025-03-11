@@ -123,11 +123,13 @@ namespace L20250217
                         wall.transform.X = x;
                         wall.transform.Y = y;
 
-                        SpriteRenderer spriteRenderer = wall.AddComponent(new SpriteRenderer());
+                        SpriteRenderer spriteRenderer = wall.AddComponent<SpriteRenderer>();
                         spriteRenderer.LoadBmp("wall.bmp");
                         spriteRenderer.orderlayer = 1;
 
                         spriteRenderer.Shape = '*';
+
+                        wall.AddComponent<BoxCollider2D>();
 
                         world.Instanciate(wall); // 만든거 등록
                     }
@@ -144,8 +146,7 @@ namespace L20250217
                         player.transform.X = x;
                         player.transform.Y = y;
 
-                        player.AddComponent(new PlayerController());
-                        SpriteRenderer spriteRenderer = player.AddComponent(new SpriteRenderer());
+                        SpriteRenderer spriteRenderer = player.AddComponent<SpriteRenderer>();
                         spriteRenderer.colorKey.r = 255;
                         spriteRenderer.colorKey.g = 0;
                         spriteRenderer.colorKey.b = 255;
@@ -157,6 +158,9 @@ namespace L20250217
 
                         spriteRenderer.Shape = 'P';
 
+                        player.AddComponent<PlayerController>();
+                        player.AddComponent<CharacterController2D>();
+
                         world.Instanciate(player);
 
                     }
@@ -167,7 +171,7 @@ namespace L20250217
                         monster.transform.X = x;
                         monster.transform.Y = y;
 
-                        SpriteRenderer spriteRenderer = monster.AddComponent(new SpriteRenderer());
+                        SpriteRenderer spriteRenderer = monster.AddComponent<SpriteRenderer>();
                         spriteRenderer.colorKey.r = 255;
                         spriteRenderer.colorKey.g = 255;
                         spriteRenderer.colorKey.b = 255;
@@ -176,6 +180,9 @@ namespace L20250217
                         spriteRenderer.orderlayer = 4;
 
                         spriteRenderer.Shape = 'M';
+
+                       monster.AddComponent<AIController>();
+                        monster.AddComponent<CharacterController2D>();
 
                         world.Instanciate(monster);
                     }
@@ -186,7 +193,7 @@ namespace L20250217
                         goal.transform.X = x;
                         goal.transform.Y = y;
 
-                        SpriteRenderer spriteRenderer = goal.AddComponent(new SpriteRenderer());
+                        SpriteRenderer spriteRenderer = goal.AddComponent<SpriteRenderer>();
                         spriteRenderer.colorKey.r = 255;
                         spriteRenderer.colorKey.g = 255;
                         spriteRenderer.colorKey.b = 255;
@@ -206,7 +213,7 @@ namespace L20250217
                         floor.transform.X = x;
                         floor.transform.Y = y;
 
-                        SpriteRenderer spriteRenderer = floor.AddComponent(new SpriteRenderer());
+                        SpriteRenderer spriteRenderer = floor.AddComponent<SpriteRenderer>();
                         spriteRenderer.LoadBmp("floor.bmp");
                         spriteRenderer.orderlayer = 0;
 
@@ -219,6 +226,8 @@ namespace L20250217
             // loading cpmplete
             // sort
             world.Sort();
+
+            Awake();
         }
 
         public void ProcessInput()
@@ -280,6 +289,11 @@ namespace L20250217
                 Update();
                 Rander();
             }
+        }
+
+        public void Awake()
+        {
+            world.Awake();
         }
 
         public void SetSortCompare(World.SortCompare inSortCompare)

@@ -12,9 +12,13 @@ namespace L20250217
 
         private float elapsedTime = 0;
 
-        public AIController(int inX, int inY, char inShape)
-        {
+        public SpriteRenderer spriteRenderer;
+        public CharacterController2D characterController2D;
 
+        public override void Awake()
+        {
+            spriteRenderer = GetComponent<SpriteRenderer>();
+            characterController2D = GetComponent<CharacterController2D>();
         }
 
         public override void Update()
@@ -24,38 +28,26 @@ namespace L20250217
 
         public void Move()
         {
-            /*if (elapsedTime > 500f)
+            if (elapsedTime > 500f)
             {
                 int count = random.Next(0, 4);
 
                 switch (count)
                 {
                     case 0:
-                        if (!PredictCollision(X - 1, Y))
-                        {
-                            X--;
-                        }
+                        characterController2D.Move(-1, 0);
                         break;
 
                     case 1:
-                        if (!PredictCollision(X + 1, Y))
-                        {
-                            X++;
-                        }
+                        characterController2D.Move(1, 0);
                         break;
 
                     case 2:
-                        if (!PredictCollision(X, Y - 1))
-                        {
-                            Y--;
-                        }
+                        characterController2D.Move(0, 1);
                         break;
 
                     case 3:
-                        if (!PredictCollision(X, Y + 1))
-                        {
-                            Y++;
-                        }
+                        characterController2D.Move(0, -1);
                         break;
 
                     default:
@@ -63,7 +55,7 @@ namespace L20250217
                 }
                 elapsedTime = 0;
             }
-            elapsedTime += Time.deltaTime;*/
+            elapsedTime += Time.deltaTime;
         }
     }
 }

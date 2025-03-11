@@ -68,5 +68,16 @@ namespace L20250217
                 }
             }
         }
+
+        public void Awake()
+        {
+            foreach(var choiceObject in gameObjects)
+            {
+                foreach (Component component in choiceObject.components)
+                {
+                    component.Awake();
+                }
+            }
+        }
     }
 }
