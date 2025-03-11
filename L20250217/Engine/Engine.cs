@@ -38,8 +38,8 @@ namespace L20250217
 
         protected bool isRunning = true; // 게임이 돌아가는 동안 계속 돌아가게 하기 위해 사용되는 변수
 
-        public IntPtr myWindow;
-        public IntPtr myRenderer;
+        public nint myWindow;
+        public nint myRenderer;
         public SDL.SDL_Event myEvent; // 메세지 처리(사용자 처리가 추가 구조를 바꿈)
 
         public bool Init()
@@ -123,7 +123,7 @@ namespace L20250217
                         wall.transform.X = x;
                         wall.transform.Y = y;
 
-                        SpriteRenderer spriteRenderer = wall.AddComponent<SpriteRenderer>(new SpriteRenderer());
+                        SpriteRenderer spriteRenderer = wall.AddComponent(new SpriteRenderer());
                         spriteRenderer.LoadBmp("wall.bmp");
                         spriteRenderer.orderlayer = 1;
 
@@ -144,15 +144,15 @@ namespace L20250217
                         player.transform.X = x;
                         player.transform.Y = y;
 
-                        player.AddComponent<PlayerController>(new PlayerController());
-                        SpriteRenderer spriteRenderer = player.AddComponent<SpriteRenderer>(new SpriteRenderer());
+                        player.AddComponent(new PlayerController());
+                        SpriteRenderer spriteRenderer = player.AddComponent(new SpriteRenderer());
                         spriteRenderer.colorKey.r = 255;
                         spriteRenderer.colorKey.g = 0;
                         spriteRenderer.colorKey.b = 255;
                         spriteRenderer.colorKey.a = 255;
                         spriteRenderer.LoadBmp("player.bmp", true);
                         spriteRenderer.preocessTime = 150.0f;
-                        spriteRenderer.maxCellCountX = 7;
+                        spriteRenderer.maxCellCountX = 5;
                         spriteRenderer.orderlayer = 3;
 
                         spriteRenderer.Shape = 'P';
@@ -167,7 +167,7 @@ namespace L20250217
                         monster.transform.X = x;
                         monster.transform.Y = y;
 
-                        SpriteRenderer spriteRenderer = monster.AddComponent<SpriteRenderer>(new SpriteRenderer());
+                        SpriteRenderer spriteRenderer = monster.AddComponent(new SpriteRenderer());
                         spriteRenderer.colorKey.r = 255;
                         spriteRenderer.colorKey.g = 255;
                         spriteRenderer.colorKey.b = 255;
@@ -186,7 +186,7 @@ namespace L20250217
                         goal.transform.X = x;
                         goal.transform.Y = y;
 
-                        SpriteRenderer spriteRenderer = goal.AddComponent<SpriteRenderer>(new SpriteRenderer());
+                        SpriteRenderer spriteRenderer = goal.AddComponent(new SpriteRenderer());
                         spriteRenderer.colorKey.r = 255;
                         spriteRenderer.colorKey.g = 255;
                         spriteRenderer.colorKey.b = 255;
@@ -199,14 +199,14 @@ namespace L20250217
                         world.Instanciate(goal);
                     }
 
-                    if(true)
+                    if (true)
                     {
                         GameObject floor = new GameObject();
                         floor.Name = "Floor";
                         floor.transform.X = x;
                         floor.transform.Y = y;
 
-                        SpriteRenderer spriteRenderer = floor.AddComponent<SpriteRenderer>(new SpriteRenderer());
+                        SpriteRenderer spriteRenderer = floor.AddComponent(new SpriteRenderer());
                         spriteRenderer.LoadBmp("floor.bmp");
                         spriteRenderer.orderlayer = 0;
 
@@ -247,7 +247,7 @@ namespace L20250217
             {
                 for (int X = 0; X < 40; X++)
                 {
-                    if (frontBuffer[Y, X] != Engine.backBuffer[Y, X])
+                    if (frontBuffer[Y, X] != backBuffer[Y, X])
                     {
                         frontBuffer[Y, X] = backBuffer[Y, X];
                         Console.SetCursorPosition(X, Y);
