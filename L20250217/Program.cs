@@ -49,6 +49,7 @@ namespace L20250217
 
             }
         }
+
         class WrongPasswordException : Exception
         {
             public WrongPasswordException() : base("비번 틀림")
@@ -195,16 +196,16 @@ namespace L20250217
             // Action : 반환형이 없는 델리게이트를 줄인것
             // Func<int, int> : 반환형이 있는 델리게이트를 줄인것, 마지막 인자가 반환형임
             Action helloAction = Test;
-            Func<int, int> f = (int a) => { return a;};
+            Func<int, int> f = (int a) => { return a; };
             f(2);*/
 
-            /*Engine.Instance.Init();
+            Engine.Instance.Init();
             Engine.Instance.SetSortCompare(Compare);
 
             Engine.Instance.Load("level01.map");
             Engine.Instance.Run();
 
-            Engine.Instance.Quit();*/
+            Engine.Instance.Quit();
 
             /*// 에외 처리 예시
             StreamReader sr = null;
