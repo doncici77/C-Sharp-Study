@@ -42,6 +42,10 @@ namespace L20250217
         public nint myRenderer;
         public SDL.SDL_Event myEvent; // 메세지 처리(사용자 처리가 추가 구조를 바꿈)
 
+        protected ConsoleKeyInfo keyInfo; // 키보드 입력을 받기 위한 변수
+
+        public World world; // World 객체 생성
+
         public bool Init()
         {
             // 엔진 초기화
@@ -64,6 +68,8 @@ namespace L20250217
             myRenderer = SDL.SDL_CreateRenderer(myWindow, -1, SDL.SDL_RendererFlags.SDL_RENDERER_ACCELERATED |
                 SDL.SDL_RendererFlags.SDL_RENDERER_PRESENTVSYNC | SDL.SDL_RendererFlags.SDL_RENDERER_TARGETTEXTURE);
 
+            world = new World(); // world 객체 생성
+
             return true;
         }
 
@@ -78,10 +84,6 @@ namespace L20250217
 
             return true;
         }
-
-        protected ConsoleKeyInfo keyInfo; // 키보드 입력을 받기 위한 변수
-
-        public World world; // World 객체 생성
 
         public void Load(string filename)
         {
@@ -109,8 +111,6 @@ namespace L20250217
                 scene.Add(sr.ReadLine());
             }
             sr.Close();
-
-            world = new World(); // world 객체 생성
 
             for (int y = 0; y < scene.Count; y++)
             {
@@ -280,6 +280,11 @@ namespace L20250217
                 Update();
                 Rander();
             }
+        }
+
+        public void SetSortCompare(World.SortCompare inSortCompare)
+        {
+            world.sortCompare = inSortCompare;
         }
     }
 }

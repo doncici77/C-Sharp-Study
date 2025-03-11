@@ -106,6 +106,19 @@ namespace L20250217
                 set;
             }
         }
+
+        public static int Compare(GameObject first, GameObject second)
+        {
+            SpriteRenderer spriteRenderer1 = first.GetComponent<SpriteRenderer>();
+            SpriteRenderer spriteRenderer2 = second.GetComponent<SpriteRenderer>();
+            if (spriteRenderer1 == null || spriteRenderer2 == null)
+            {
+                return 0;
+            }
+
+            return spriteRenderer1.orderlayer - spriteRenderer2.orderlayer;
+        }
+
         static void Main(string[] args)
         {
             /*// 리플렉션 예시
@@ -149,19 +162,21 @@ namespace L20250217
                 Console.WriteLine($"{propertyInfo.Name} , {propertyInfo.GetValue(d)}");
             }*/
 
+            /*// 델리게이트 예제
             Sample.Command command = new Sample.Command((int A, int B) => { return A * B; });
             Console.WriteLine(command(1, 2));
 
             Sample sample = new Sample();
             sample.command = Add; // 다른클래스의 델리게이트 변수에 프로그램 클래스의 함수를 저장 가능.
-            sample.Sort();
+            sample.Sort();*/
 
-            /*Engine.Instance.Init();
+            Engine.Instance.Init();
+            Engine.Instance.SetSortCompare(Compare);
 
             Engine.Instance.Load("level01.map");
             Engine.Instance.Run();
 
-            Engine.Instance.Quit();*/
+            Engine.Instance.Quit();
 
             /*// 에외 처리 예시
             StreamReader sr = null;

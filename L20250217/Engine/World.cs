@@ -8,6 +8,9 @@ namespace L20250217
 {
     public class World
     {
+        public delegate int SortCompare(GameObject forst, GameObject second);
+        public SortCompare sortCompare;
+
         // DynamicArray
         List<GameObject> gameObjects = new List<GameObject>();
 
@@ -53,8 +56,10 @@ namespace L20250217
             {
                 for (int j = i + 1; j < gameObjects.Count; j++)
                 {
-                    if (gameObjects[i].GetComponent<SpriteRenderer>().orderlayer -
-                        gameObjects[j].GetComponent<SpriteRenderer>().orderlayer > 0)
+                    //if (gameObjects[i].GetComponent<SpriteRenderer>().orderlayer -
+                    //    gameObjects[j].GetComponent<SpriteRenderer>().orderlayer > 0)
+
+                        if (sortCompare(gameObjects[i], gameObjects[j]) > 0)
                     {
                         GameObject temp = gameObjects[i];
                         gameObjects[i] = gameObjects[j];
