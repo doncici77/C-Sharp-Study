@@ -47,6 +47,8 @@ namespace L20250217
 
         public World world; // World 객체 생성
 
+        public IntPtr Font;
+
         public bool Init()
         {
             // 엔진 초기화
@@ -69,6 +71,13 @@ namespace L20250217
             myRenderer = SDL.SDL_CreateRenderer(myWindow, -1, SDL.SDL_RendererFlags.SDL_RENDERER_ACCELERATED |
                 SDL.SDL_RendererFlags.SDL_RENDERER_PRESENTVSYNC | SDL.SDL_RendererFlags.SDL_RENDERER_TARGETTEXTURE);
 
+            // 폰트 초기화
+            string projectFolder = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
+
+            SDL_ttf.TTF_Init();
+            //SDL_ttf.TTF_OpenFont(projectFolder + "/data/", 30);
+            Font = SDL_ttf.TTF_OpenFont("c:/Windows/Fonts/gulim.ttc", 30);
+
             world = new World(); // world 객체 생성
 
             return true;
@@ -77,6 +86,8 @@ namespace L20250217
         public bool Quit()
         {
             isRunning = false;
+
+            SDL_ttf.TTF_Quit();
 
             // 종료
             SDL.SDL_DestroyRenderer(myRenderer);
