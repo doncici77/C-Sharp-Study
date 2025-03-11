@@ -3,8 +3,33 @@ using System.Text;
 
 namespace L20250217
 {
-    internal class Program
+    public class Sample
     {
+        public delegate int Command(int a, int b);
+
+        public Command command;
+
+        public void Sort()
+        {
+            if(command(1, 2) > 0)
+            {
+                // 교환
+            }
+        }
+    }
+
+    public class Program
+    {
+        static int Add(int A, int B)
+        {
+            return A + B;
+        }
+
+        static int Sub(int A, int B)
+        {
+            return A - B;
+        }
+
         // 네트워크에 접속 했지만 비밀번호가 틀리다.
         class CustomException : Exception
         {
@@ -124,12 +149,19 @@ namespace L20250217
                 Console.WriteLine($"{propertyInfo.Name} , {propertyInfo.GetValue(d)}");
             }*/
 
-            Engine.Instance.Init();
+            Sample.Command command = new Sample.Command((int A, int B) => { return A * B; });
+            Console.WriteLine(command(1, 2));
+
+            Sample sample = new Sample();
+            sample.command = Add; // 다른클래스의 델리게이트 변수에 프로그램 클래스의 함수를 저장 가능.
+            sample.Sort();
+
+            /*Engine.Instance.Init();
 
             Engine.Instance.Load("level01.map");
             Engine.Instance.Run();
 
-            Engine.Instance.Quit();
+            Engine.Instance.Quit();*/
 
             /*// 에외 처리 예시
             StreamReader sr = null;

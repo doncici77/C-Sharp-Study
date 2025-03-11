@@ -49,8 +49,6 @@ namespace L20250217
 
         public void Sort()
         {
-            //gameObjects.Sort();
-
             for (int i = 0; i < gameObjects.Count; i++)
             {
                 for (int j = i + 1; j < gameObjects.Count; j++)
