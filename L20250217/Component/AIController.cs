@@ -28,7 +28,6 @@ namespace L20250217
 
         public void Move()
         {
-            return;
             if (elapsedTime > 500f)
             {
                 int count = random.Next(0, 4);

@@ -100,5 +100,18 @@ namespace L20250217
                 }
             }
         }
+
+        public static GameObject Find(string gameObjectName)
+        {
+            foreach(var choiceObject in Engine.Instance.world.GetAllGameObjects)
+            {
+                if(choiceObject.Name.CompareTo(gameObjectName) == 0)
+                {
+                    return choiceObject;
+                }
+            }
+
+            return null;
+        }
     }
 }

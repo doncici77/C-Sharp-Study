@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace L20250217
@@ -75,6 +76,8 @@ namespace L20250217
 
         public bool Quit()
         {
+            isRunning = false;
+
             // 종료
             SDL.SDL_DestroyRenderer(myRenderer);
 
@@ -203,6 +206,7 @@ namespace L20250217
                         spriteRenderer.orderlayer = 2;
 
                         spriteRenderer.Shape = 'G';
+                        goal.AddComponent<CharacterController2D>().isTrigger = true;
 
                         world.Instanciate(goal);
                     }
@@ -223,6 +227,13 @@ namespace L20250217
                         world.Instanciate(floor);
                     }
                 }
+
+                // 심판 생성
+                GameObject gameManager = new GameObject();
+                gameManager.Name = "GameManager";
+
+                gameManager.AddComponent<GameManager>();
+                world.Instanciate(gameManager);
             }
             // loading cpmplete
             // sort

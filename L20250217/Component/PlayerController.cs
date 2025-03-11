@@ -40,6 +40,17 @@ namespace L20250217
 
         public void OnTriggerEnter2D(Collider2D other)
         {
+            if(other.gameObject.Name.CompareTo("Goal") == 0)
+            {
+                GameObject.Find("GameManager").GetComponent<GameManager>().isFinish = true;
+                //Engine.Instance.Quit();
+            }
+
+            if (other.gameObject.Name.CompareTo("Monster") == 0)
+            {
+                GameObject.Find("GameManager").GetComponent<GameManager>().isGameOver = true;
+            }
+
             Console.WriteLine($"겹침 감지 {other.gameObject.Name}");
         }
     }
