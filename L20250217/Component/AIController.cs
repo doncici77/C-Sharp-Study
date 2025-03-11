@@ -28,6 +28,7 @@ namespace L20250217
 
         public void Move()
         {
+            return;
             if (elapsedTime > 500f)
             {
                 int count = random.Next(0, 4);
@@ -56,6 +57,11 @@ namespace L20250217
                 elapsedTime = 0;
             }
             elapsedTime += Time.deltaTime;
+        }
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            Console.WriteLine($"겹침감지 {other.gameObject.Name}");
         }
     }
 }

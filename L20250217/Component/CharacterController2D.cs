@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Reflection;
 
 namespace L20250217
 {
@@ -19,7 +20,18 @@ namespace L20250217
                 {
                     if(choiceObject.transform.X == futureX && choiceObject.transform.Y == futureY)
                     {
-                        return;
+                        if(choiceObject.GetComponent<Collider2D>().isTrigger == true)
+                        {
+                            Object[] parameters = { choiceObject.GetComponent<Collider2D>() };
+                            gameObject.ExecuteMethod("OnTriggerEnter2D", parameters);
+                            Object[] parameters2 = { gameObject.GetComponent<Collider2D>() };
+                            choiceObject.ExecuteMethod("OnTriggerEnter2D", parameters2);
+                            break;
+                        }
+                        else
+                        {
+                            return;
+                        }
                     }
                 }
             }

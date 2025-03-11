@@ -20,7 +20,6 @@ namespace L20250217
             {
                 characterController2D.Move(-1, 0);
                 spriteRenderer.spriteIndexY = 0;
-
             }
             else if (Input.GetKeyDown(SDL.SDL_Keycode.SDLK_d) || Input.GetKeyDown(SDL.SDL_Keycode.SDLK_RIGHT))
             {
@@ -39,5 +38,9 @@ namespace L20250217
             }
         }
 
+        public void OnTriggerEnter2D(Collider2D other)
+        {
+            Console.WriteLine($"겹침 감지 {other.gameObject.Name}");
+        }
     }
 }

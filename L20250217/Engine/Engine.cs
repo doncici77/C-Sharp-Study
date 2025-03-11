@@ -181,8 +181,9 @@ namespace L20250217
 
                         spriteRenderer.Shape = 'M';
 
-                       monster.AddComponent<AIController>();
-                        monster.AddComponent<CharacterController2D>();
+                        monster.AddComponent<AIController>();
+                        CharacterController2D characterController2D = monster.AddComponent<CharacterController2D>();
+                        characterController2D.isTrigger = true;
 
                         world.Instanciate(monster);
                     }

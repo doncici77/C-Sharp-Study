@@ -1,5 +1,6 @@
 ﻿using SDL2;
 using System;
+using System.Reflection;
 
 namespace L20250217
 {
@@ -82,6 +83,22 @@ namespace L20250217
         public virtual void Update()
         {
             // 모든 컴포넌트의 update 함수 실행해줘.
+        }
+
+        public void ExecuteMethod(string methodName, Object[] parameters)
+        {
+            foreach (var component in components)
+            {
+                Type type = component.GetType();
+                MethodInfo[] methodInfos = type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                foreach (var methodInfo in methodInfos)
+                {
+                    if (methodInfo.Name.CompareTo(methodName) == 0)
+                    {
+                        methodInfo.Invoke(component, parameters);
+                    }
+                }
+            }
         }
     }
 }
