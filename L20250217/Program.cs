@@ -18,6 +18,17 @@ namespace L20250217
         }
     }
 
+    public class EvenetClass
+    {
+        public delegate void DelegateSample();
+        public event DelegateSample EventSample;
+
+        public void Do()
+        {
+            EventSample?.Invoke();
+        }
+    }
+
     public class Program
     {
         static int Add(int A, int B)
@@ -119,6 +130,11 @@ namespace L20250217
             return spriteRenderer1.orderlayer - spriteRenderer2.orderlayer;
         }
 
+        public static void Test()
+        {
+            Console.WriteLine("Test");
+        }
+
         static void Main(string[] args)
         {
             /*// 리플렉션 예시
@@ -170,13 +186,25 @@ namespace L20250217
             sample.command = Add; // 다른클래스의 델리게이트 변수에 프로그램 클래스의 함수를 저장 가능.
             sample.Sort();*/
 
-            Engine.Instance.Init();
+            /*// 이벤트 델리게이트 예제
+            EvenetClass evenetClass = new EvenetClass();
+            evenetClass.EventSample += Test;
+            evenetClass.Do();*/
+
+            /*// Action 과 Func 델리게이트 자료형 예제
+            // Action : 반환형이 없는 델리게이트를 줄인것
+            // Func<int, int> : 반환형이 있는 델리게이트를 줄인것, 마지막 인자가 반환형임
+            Action helloAction = Test;
+            Func<int, int> f = (int a) => { return a;};
+            f(2);*/
+
+            /*Engine.Instance.Init();
             Engine.Instance.SetSortCompare(Compare);
 
             Engine.Instance.Load("level01.map");
             Engine.Instance.Run();
 
-            Engine.Instance.Quit();
+            Engine.Instance.Quit();*/
 
             /*// 에외 처리 예시
             StreamReader sr = null;
