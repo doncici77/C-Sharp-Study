@@ -1,4 +1,5 @@
-﻿using SDL2;
+﻿using Newtonsoft.Json;
+using SDL2;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -6,6 +7,7 @@ using System.Drawing;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -251,6 +253,24 @@ namespace L20250217
             world.Sort();
 
             Awake();
+
+            // json 형식으로 저장
+            string SceneFile = JsonConvert.SerializeObject(world.GetAllGameObjects, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            });
+            Console.WriteLine(SceneFile);
+
+            StreamWriter sw = new StreamWriter("sample.uasset");
+            sw.WriteLine(SceneFile);
+            sw.Close();
+
+            /*world.GetAllGameObjects = JsonConvert.DeserializeObject<List<GameObject>>(SceneFile, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            });*/
         }
 
         public void ProcessInput()
