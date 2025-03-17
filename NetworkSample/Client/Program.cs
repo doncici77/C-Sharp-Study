@@ -29,8 +29,11 @@ namespace Client
             int num1 = 100;
             int num2 = 200;
 
+            // 보낼 연산자
+            char op = '+';
+
             // 두수를 문자열화
-            String message = $"{num1}+{num2}";
+            String message = $"{num1}{op}{num2}";
 
             // 버퍼에 인코딩후 보내기
             buffer = Encoding.UTF8.GetBytes(message);

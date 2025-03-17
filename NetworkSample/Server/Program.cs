@@ -39,8 +39,11 @@ namespace Server
                     isRunning = false;
                 }
 
+                // 받을 연산자
+                char op = '+';
+
                 // 가져온 숫자 두개 + 기준으로 나누기
-                string[] numText = Encoding.UTF8.GetString(buffer).Split('+', '\0');
+                string[] numText = Encoding.UTF8.GetString(buffer).Split(op, '\0');
 
                 // 문자열 정수화
                 int a = int.Parse(numText[0]);
