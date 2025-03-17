@@ -1,6 +1,7 @@
 ﻿using System.Net.Sockets;
 using System.Net;
 using System.Text;
+using System;
 
 namespace Server
 {
@@ -44,6 +45,9 @@ namespace Server
 
                 // 가져온 숫자 두개 + 기준으로 나누기
                 string[] numText = Encoding.UTF8.GetString(buffer).Split(op, '\0');
+
+                Console.WriteLine(Encoding.UTF8.GetString(buffer));
+                Console.WriteLine("서버가 받음");
 
                 // 문자열 정수화
                 int a = int.Parse(numText[0]);
