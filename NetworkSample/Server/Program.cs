@@ -1,5 +1,6 @@
 ﻿using System.Net.Sockets;
 using System.Net;
+using System.Text;
 
 namespace Server
 {
@@ -37,6 +38,16 @@ namespace Server
 
                     isRunning = false;
                 }
+
+                // 가져온 숫자 두개 + 기준으로 나누기
+                string[] numText = Encoding.UTF8.GetString(buffer).Split('+', '\0');
+
+                // 문자열 정수화
+                int a = int.Parse(numText[0]);
+                int b = int.Parse(numText[1]);
+
+                // 덧셈값 버퍼에 인코딩
+                buffer = Encoding.UTF8.GetBytes((a + b).ToString());
 
                 // 수신한 데이터를 그대로 클라이언트에게 다시 전송 (에코 기능)
                 int SendLength = clientSocket.Send(buffer);

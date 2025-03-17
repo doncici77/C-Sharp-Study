@@ -12,6 +12,7 @@ namespace Client
     {
         static void Main(string[] args)
         {
+
             Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             // 127.0.0.1 => 무조건 자기 자신
@@ -21,11 +22,23 @@ namespace Client
 
             byte[] buffer;
 
-            String message = "Hello World!";
+            //String message = "박광호";
+            //buffer = Encoding.UTF8.GetBytes(message);
+
+            // 더할 두 수 세팅
+            int num1 = 100;
+            int num2 = 200;
+
+            // 두수를 문자열화
+            String message = $"{num1}+{num2}";
+
+            // 버퍼에 인코딩후 보내기
             buffer = Encoding.UTF8.GetBytes(message);
-            int SendLength = serverSocket.Send(buffer);
+            int SendLength = serverSocket.Send(buffer, 0, buffer.Length, SocketFlags.None);
+
 
             byte[] buffer2 = new byte[1024];
+            // 서버에서 값 받아오기
             serverSocket.Receive(buffer2);
 
             Console.WriteLine(Encoding.UTF8.GetString(buffer2));
