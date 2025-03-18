@@ -1,10 +1,21 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+
+public class MessageDataClient
+{
+    public MessageDataClient(string inMessage)
+    {
+        message = inMessage;
+    }
+
+    public string message;
+}
 
 namespace Client
 {
@@ -22,8 +33,9 @@ namespace Client
 
             byte[] buffer;
 
-            //String message = "박광호";
-            //buffer = Encoding.UTF8.GetBytes(message);
+            /*// 클라이언트 덧셈 보내기 예제
+            String message = "박광호";
+            buffer = Encoding.UTF8.GetBytes(message);
 
             // 더할 두 수 세팅
             int num1 = 100;
@@ -33,12 +45,15 @@ namespace Client
             char op = '+';
 
             // 두수를 문자열화
-            String message = $"{num1}{op}{num2}";
+            String message = $"{num1}{op}{num2}";*/
+
+            MessageDataClient data = new MessageDataClient("안녕하세요");
+
+            string g = JsonConvert.SerializeObject(data);
 
             // 버퍼에 인코딩후 보내기
-            buffer = Encoding.UTF8.GetBytes(message);
+            buffer = Encoding.UTF8.GetBytes(g);
             int SendLength = serverSocket.Send(buffer, 0, buffer.Length, SocketFlags.None);
-
 
             byte[] buffer2 = new byte[1024];
             // 서버에서 값 받아오기

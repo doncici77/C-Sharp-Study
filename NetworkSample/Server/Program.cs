@@ -2,6 +2,17 @@
 using System.Net;
 using System.Text;
 using System;
+using Newtonsoft.Json;
+
+public class MessageDataServer
+{
+    public MessageDataServer(string inMessage)
+    {
+        message = inMessage;
+    }
+
+    public string message;
+}
 
 namespace Server
 {
@@ -31,7 +42,7 @@ namespace Server
                 byte[] buffer = new byte[1024];
                 // 클라이언트로부터 데이터를 수신하고, buffer 배열에 저장
                 int RecvLength = clientSocket.Receive(buffer);
-                if(RecvLength <= 0)
+                if (RecvLength <= 0)
                 {
                     // 내쪽에서 행함
                     // close == 0
@@ -40,6 +51,7 @@ namespace Server
                     isRunning = false;
                 }
 
+                /*// 정수 덧셈 서버 받기
                 // 받을 연산자
                 char op = '+';
 
@@ -54,7 +66,31 @@ namespace Server
                 int b = int.Parse(numText[1]);
 
                 // 덧셈값 버퍼에 인코딩
-                buffer = Encoding.UTF8.GetBytes((a + b).ToString());
+                buffer = Encoding.UTF8.GetBytes((a + b).ToString());*/
+
+                // 제이슨 형식으로 잘 들어봤는지 체크
+                Console.WriteLine(Encoding.UTF8.GetString(buffer));
+
+                // 잘 들어왔는디 비교할 값 세팅
+                MessageDataServer checkMessageData = new MessageDataServer("안녕하세요");
+                string jsonMessage = JsonConvert.SerializeObject(checkMessageData);
+
+                // 값 받아오기
+                MessageDataServer getMessageData = new MessageDataServer(Encoding.UTF8.GetString(buffer));
+
+                // 가져온 값이 맞는지 비교후 반환할 값 세팅
+                string g;
+                if (getMessageData.message.CompareTo(jsonMessage) == 0)
+                {
+                    getMessageData.message = "반가워요";
+                    g = JsonConvert.SerializeObject(getMessageData);
+                }
+                else
+                {
+                    getMessageData.message = "error";
+                    g = JsonConvert.SerializeObject(getMessageData);
+                }
+                buffer = Encoding.UTF8.GetBytes(g);
 
                 // 수신한 데이터를 그대로 클라이언트에게 다시 전송 (에코 기능)
                 int SendLength = clientSocket.Send(buffer);
