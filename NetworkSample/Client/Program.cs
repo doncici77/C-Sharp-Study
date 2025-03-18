@@ -36,6 +36,7 @@ namespace Client
             //[][] [][][][][][][][]
             byte[] lengthBuffer = new byte[2];
             lengthBuffer = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)length));
+            Console.WriteLine("lengthBuffer : " + lengthBuffer.Length);
 
             //[][][][][][][][][][][]
             byte[] buffer = new byte[2 + length];
