@@ -3,6 +3,7 @@ using System.Net;
 using System.Text;
 using System;
 using Newtonsoft.Json;
+using System.Reflection;
 
 public class MessageDataServer
 {
@@ -19,6 +20,47 @@ namespace Server
     internal class Program
     {
         static void Main(string[] args)
+        {
+            Socket listensocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+            IPEndPoint listenEndPoint = new IPEndPoint(IPAddress.Any, 4000);
+
+            listensocket.Bind(listenEndPoint);
+
+            listensocket.Listen(10);
+
+            bool isRunning = true;
+            while (isRunning)
+            {
+                Socket clientSocket = listensocket.Accept();
+
+                byte[] buffer = new byte[1024];
+                int RecvLength = clientSocket.Receive(buffer);
+                if (RecvLength <= 0)
+                {
+
+                    isRunning = false;
+                }
+
+
+                int SendLength = clientSocket.Send(buffer);
+                if(SendLength <= 0)
+                {
+                    isRunning = false;
+                }
+
+                clientSocket.Close();
+            }
+
+            listensocket.Close();
+        }
+
+
+        /// <summary>
+        /// 소켓 더하기 연산 서버
+        /// </summary>
+        /// <param name="args"></param>
+        static void PlusSocketServer(string[] args)
         {
             // 새로운 소켓을 생성 (IPv4 주소 체계, TCP 프로토콜 사용)
             Socket listensocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -51,7 +93,7 @@ namespace Server
                     isRunning = false;
                 }
 
-                /*// 정수 덧셈 서버 받기
+                // 정수 덧셈 서버 받기
                 // 받을 연산자
                 char op = '+';
 
@@ -66,8 +108,53 @@ namespace Server
                 int b = int.Parse(numText[1]);
 
                 // 덧셈값 버퍼에 인코딩
-                buffer = Encoding.UTF8.GetBytes((a + b).ToString());*/
+                buffer = Encoding.UTF8.GetBytes((a + b).ToString());
 
+                // 수신한 데이터를 그대로 클라이언트에게 다시 전송 (에코 기능)
+                int SendLength = clientSocket.Send(buffer);
+                if (SendLength <= 0)
+                {
+                    // 상대방이 행함
+                    // close == 0
+                    // error < 0
+
+                    isRunning = false;
+                }
+
+                // 클라이언트 소켓 연결 종료
+                clientSocket.Close();
+            }
+
+            listensocket.Close();
+        }
+
+        /// <summary>
+        /// 제이슨 형식의 값 예제 서버
+        /// </summary>
+        /// <param name="args"></param>
+        static void JsonSocketServer(string[] args)
+        {
+            Socket listensocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+            IPEndPoint listenEndPoint = new IPEndPoint(IPAddress.Any, 4000);
+
+            listensocket.Bind(listenEndPoint);
+
+            listensocket.Listen(10);
+
+            bool isRunning = true;
+            while (isRunning)
+            {
+                Socket clientSocket = listensocket.Accept();
+
+                byte[] buffer = new byte[1024];
+                int RecvLength = clientSocket.Receive(buffer);
+                if (RecvLength <= 0)
+                {
+                    isRunning = false;
+                }
+
+                // 제이슨 형식의 값 예제 서버
                 // 제이슨 형식으로 잘 들어봤는지 체크
                 Console.WriteLine(Encoding.UTF8.GetString(buffer));
 
@@ -92,18 +179,13 @@ namespace Server
                 }
                 buffer = Encoding.UTF8.GetBytes(g);
 
-                // 수신한 데이터를 그대로 클라이언트에게 다시 전송 (에코 기능)
-                int SendLength = clientSocket.Send(buffer);
-                if(SendLength <= 0)
-                {
-                    // 상대방이 행함
-                    // close == 0
-                    // error < 0
 
+                int SendLength = clientSocket.Send(buffer);
+                if (SendLength <= 0)
+                {
                     isRunning = false;
                 }
 
-                // 클라이언트 소켓 연결 종료
                 clientSocket.Close();
             }
 

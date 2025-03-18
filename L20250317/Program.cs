@@ -60,7 +60,7 @@ namespace L20250317
             // json 파싱
             string Data = "{Gold : 10, HP : 20, MP : 30}";
 
-            JObject json = JObject.Parse(Data);
+            JObject json = JObject.Parse(Data); 
             Console.WriteLine(json.Value<int>("Gold"));
             Console.WriteLine(json.Value<int>("HP"));
             Console.WriteLine(json.Value<int>("MP"));
