@@ -21,6 +21,7 @@ namespace L20250318_UDPServer
             EndPoint clientEndPoint = (EndPoint)serverEndPoint;
 
             int RecvLength = serverSocket.ReceiveFrom(buffer, ref clientEndPoint);
+            Console.WriteLine("서버가 받음 : " + Encoding.UTF8.GetString(buffer));
 
             int SendLength = serverSocket.SendTo(buffer, clientEndPoint);
 

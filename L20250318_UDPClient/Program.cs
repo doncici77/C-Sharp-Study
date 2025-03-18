@@ -12,8 +12,14 @@ namespace L20250318_UDPClient
     {
         static void Main(string[] args)
         {
+            /*IPHostEntry host = Dns.GetHostEntry("naver.com");
+            foreach (IPAddress address in host.AddressList)
+            {
+                Console.WriteLine(address);
+            }*/
+
             Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            IPEndPoint serverEndPoint = new IPEndPoint(IPAddress.Loopback, 6000);
+            IPEndPoint serverEndPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 6000);
 
 
             byte[] buffer = new byte[1024]; // 이것보다 받는 입장에서 버퍼사이즈가 커야한다.
@@ -25,7 +31,7 @@ namespace L20250318_UDPClient
             EndPoint remoteEndPoint = serverEndPoint;
             int RecvLength = serverSocket.ReceiveFrom(buffer2, ref remoteEndPoint);
             string message2 = Encoding.UTF8.GetString(buffer2);
-            Console.WriteLine(message2);
+            Console.WriteLine("클라이언트가 받음 : " + message2);
 
             serverSocket.Close();
         }
