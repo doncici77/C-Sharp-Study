@@ -41,9 +41,9 @@ namespace Server
             //패킷 길이 받기(header)
             byte[] headerBuffer = new byte[2];
             int RecvLength = clientSocket.Receive(headerBuffer, 2, SocketFlags.None);
-            short packetlength = BitConverter.ToInt16(headerBuffer, 0);
+            short packetlength = BitConverter.ToInt16(headerBuffer, 0); // short(16비트 정수)로 변환
+            // 바이트 오더(빅 엔디안)를 호스트 바이트 오더(리틀 엔디안)로 변환
             packetlength = IPAddress.NetworkToHostOrder(packetlength);
-
 
             //[][][][][]
             //실제 패킷(header 길이 만큼)
