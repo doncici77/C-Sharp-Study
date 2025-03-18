@@ -3,8 +3,8 @@ using System.Net;
 using System.Text;
 using System;
 using Newtonsoft.Json;
-using System.Reflection;
 using System.IO;
+using Newtonsoft.Json.Linq;
 
 public class MessageDataServer
 {
@@ -12,15 +12,77 @@ public class MessageDataServer
     {
         message = inMessage;
     }
-
     public string message;
 }
 
 namespace Server
 {
-    internal class Program
+    class Message
+    {
+        public string message;
+    }
+
+    class Program
     {
         static void Main(string[] args)
+        {
+            Socket listenSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+            IPEndPoint listenEndPoint = new IPEndPoint(IPAddress.Any, 4000);
+
+            listenSocket.Bind(listenEndPoint);
+
+            listenSocket.Listen(10);
+
+            Socket clientSocket = listenSocket.Accept();
+
+            //[][] [][][][][][]
+
+            //패킷 길이 받기(header)
+            byte[] headerBuffer = new byte[2];
+            int RecvLength = clientSocket.Receive(headerBuffer, 2, SocketFlags.None);
+            short packetlength = BitConverter.ToInt16(headerBuffer, 0);
+            packetlength = IPAddress.NetworkToHostOrder(packetlength);
+
+
+            //[][][][][]
+            //실제 패킷(header 길이 만큼)
+            byte[] dataBuffer = new byte[4096];
+            RecvLength = clientSocket.Receive(dataBuffer, packetlength, SocketFlags.None);
+
+            string JsonString = Encoding.UTF8.GetString(dataBuffer);
+
+            Console.WriteLine(JsonString);
+
+            //Custom 패킷 만들기
+            //다시 전송 메세지
+            string message = "{ \"message\" : \"클라이언트 받고 서버꺼 추가.\"}";
+            byte[] messageBuffer = Encoding.UTF8.GetBytes(message);
+            ushort length = (ushort)IPAddress.HostToNetworkOrder((short)messageBuffer.Length);
+
+            //길이  자료
+            //[][] [][][][][][][][]
+            headerBuffer = BitConverter.GetBytes(length);
+
+            //[][][][][][][][][][][]
+            byte[] packetBuffer = new byte[headerBuffer.Length + messageBuffer.Length];
+
+            Buffer.BlockCopy(headerBuffer, 0, packetBuffer, 0, headerBuffer.Length);
+            Buffer.BlockCopy(messageBuffer, 0, packetBuffer, headerBuffer.Length, messageBuffer.Length);
+
+            int SendLength = clientSocket.Send(packetBuffer, packetBuffer.Length, SocketFlags.None);
+
+
+            clientSocket.Close();
+            listenSocket.Close();
+        }
+
+
+        /// <summary>
+        /// 소켓 이미지파일 전송 수업버전 서버
+        /// </summary>
+        /// <param name="args"></param>
+        static void ImageSocketServer(string[] args)
         {
             Socket listensocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
@@ -28,7 +90,7 @@ namespace Server
             listensocket.Bind(listenEndPoint);
 
             #region TCP 서버인지 판단하는 코드
-            listensocket.Listen(10);    
+            listensocket.Listen(10);
             Socket clientSocket = listensocket.Accept();
             #endregion
 
