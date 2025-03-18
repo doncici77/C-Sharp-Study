@@ -27,7 +27,10 @@ namespace Client
             Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             IPEndPoint serverEndPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 4000);
+
+            #region TCP 클라인어트를 판단하는 코드
             serverSocket.Connect(serverEndPoint);
+            #endregion
 
             FileStream fsOutput = new FileStream("1_copy.webp", FileMode.Create);
             int RecvLength = 0;
@@ -35,7 +38,7 @@ namespace Client
             {
                 byte[] buffer = new byte[1024];
                 RecvLength = serverSocket.Receive(buffer);
-                fsOutput.Write(buffer, 0, RecvLength);
+                fsOutput.Write(buffer, 0, RecvLength);      
 
             } while (RecvLength > 0);
 

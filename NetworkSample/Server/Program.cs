@@ -27,9 +27,10 @@ namespace Server
             IPEndPoint listenEndPoint = new IPEndPoint(IPAddress.Any, 4000);
             listensocket.Bind(listenEndPoint);
 
-            listensocket.Listen(10);
-
+            #region TCP 서버인지 판단하는 코드
+            listensocket.Listen(10);    
             Socket clientSocket = listensocket.Accept();
+            #endregion
 
             #region 이미지 파일 열고 보내기
             FileStream fsInput = new FileStream("1.webp", FileMode.Open);
