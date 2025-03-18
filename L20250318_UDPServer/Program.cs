@@ -18,8 +18,13 @@ namespace L20250318_UDPServer
             serverSocket.Bind(serverEndPoint);
 
             byte[] buffer = new byte[1024]; // 이것보다 받는 입장에서 버퍼사이즈가 커야한다.
-            EndPoint clientEndPoint = new IPEndPoint();
-            serverSocket.ReceiveFrom(buffer, ref clientEndPoint);
+            EndPoint clientEndPoint = (EndPoint)serverEndPoint;
+
+            int RecvLength = serverSocket.ReceiveFrom(buffer, ref clientEndPoint);
+
+            int SendLength = serverSocket.SendTo(buffer, clientEndPoint);
+
+            serverSocket.Close();
         }
     }
 }
