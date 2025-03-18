@@ -4,6 +4,7 @@ using System.Text;
 using System;
 using Newtonsoft.Json;
 using System.Reflection;
+using System.IO;
 
 public class MessageDataServer
 {
@@ -24,37 +25,85 @@ namespace Server
             Socket listensocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             IPEndPoint listenEndPoint = new IPEndPoint(IPAddress.Any, 4000);
-
             listensocket.Bind(listenEndPoint);
 
             listensocket.Listen(10);
 
-            bool isRunning = true;
-            while (isRunning)
+            Socket clientSocket = listensocket.Accept();
+
+            #region 이미지 파일 열고 보내기
+            FileStream fsInput = new FileStream("1.webp", FileMode.Open);
+            byte[] buffer = new byte[4096];
+            int ReadSize = 0;
+
+            do
             {
-                Socket clientSocket = listensocket.Accept();
+                ReadSize = fsInput.Read(buffer, 0, buffer.Length); // 지금까지 읽은 값 반환
+                int SendSize = clientSocket.Send(buffer, ReadSize, SocketFlags.None);
 
-                byte[] buffer = new byte[1024];
-                int RecvLength = clientSocket.Receive(buffer);
-                if (RecvLength <= 0)
-                {
+            } while (ReadSize > 0);
 
-                    isRunning = false;
-                }
+            fsInput.Close();
+            #endregion
 
-
-                int SendLength = clientSocket.Send(buffer);
-                if(SendLength <= 0)
-                {
-                    isRunning = false;
-                }
-
-                clientSocket.Close();
-            }
-
+            clientSocket.Close();
             listensocket.Close();
         }
 
+        /// <summary>
+        /// 소켓 이미지파일 전송 GPT버전 서버
+        /// </summary>
+        /// <param name="args"></param>
+        static void ImageSocketServerGPTver(string[] args)
+        {
+            // 1. 소켓 생성 (TCP 스트림 소켓)
+            Socket listensocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+            // 2. 서버의 IP와 포트 설정 후 바인딩 (모든 네트워크 인터페이스에서 4000번 포트 사용)
+            IPEndPoint listenEndPoint = new IPEndPoint(IPAddress.Any, 4000);
+            listensocket.Bind(listenEndPoint);
+
+            // 3. 클라이언트 접속 대기 (최대 10개 대기 가능)
+            listensocket.Listen(10);
+            Console.WriteLine("서버 시작됨. 클라이언트 연결 대기 중...");
+
+            bool isRunning = true;
+            while (isRunning)
+            {
+                // 4. 클라이언트 연결 수락
+                Socket clientSocket = listensocket.Accept();
+                Console.WriteLine("클라이언트 연결됨!");
+
+                // 5. 전송할 이미지 파일 경로 설정
+                string imagePath = @"C:\Users\lms29\Documents\GitHub\C-Sharp-Study\NetworkSample\Server\test.png";
+                if (!File.Exists(imagePath))
+                {
+                    Console.WriteLine("이미지 파일이 존재하지 않습니다.");
+                    clientSocket.Close();
+                    continue;
+                }
+
+                // 6. 이미지 파일을 바이트 배열로 읽기
+                byte[] imageBytes = File.ReadAllBytes(imagePath);
+
+                // 7. 이미지 크기(4바이트) 전송
+                byte[] imageSize = BitConverter.GetBytes(imageBytes.Length);
+                clientSocket.Send(imageSize);
+                Console.WriteLine("이미지 크기 전송 완료: " + imageBytes.Length + " 바이트");
+
+                // 8. 이미지 데이터 전송
+                clientSocket.Send(imageBytes);
+                Console.WriteLine("이미지 데이터 전송 완료");
+
+                // 9. 클라이언트 소켓 종료
+                clientSocket.Close();
+                Console.WriteLine("클라이언트 연결 종료");
+            }
+
+            // 10. 서버 종료
+            listensocket.Close();
+            Console.WriteLine("서버 종료");
+        }
 
         /// <summary>
         /// 소켓 더하기 연산 서버
