@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System.IO;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using System.Threading;
 
 public class MessageDataServer
 {
@@ -25,7 +26,155 @@ namespace Server
 
     class Program
     {
+        static Socket listenSocket;
+
+        static List<Socket> clientSockets = new List<Socket>();
+        //static List<Thread> threadManager = new List<Thread>();
+
+        static Object _lock = new Object();
+
+        static void AcceptThread()
+        {
+            while (true)
+            {
+                Socket clientSocket = listenSocket.Accept();
+
+                lock (_lock) // 이거하는 동안 다른 쓰레드 중단
+                {
+                    clientSockets.Add(clientSocket);
+                }
+                Console.WriteLine("Connect client : " + clientSocket.RemoteEndPoint);
+
+                Thread workThread = new Thread(new ParameterizedThreadStart(WorkThread));
+                workThread.IsBackground = true;
+                workThread.Start();
+                //threadManager.Add(workThread);
+            }
+        }
+
+        static void WorkThread(Object clientObjectSocket)
+        {
+
+            Socket clientSocket = clientObjectSocket as Socket;
+
+            while (true)
+            {
+                try
+                {
+                    byte[] headerBuffer = new byte[2];
+                    int RecvLength = clientSocket.Receive(headerBuffer, 2, SocketFlags.None);
+                    if (RecvLength > 0)
+                    {
+                        short packetlength = BitConverter.ToInt16(headerBuffer, 0);
+                        packetlength = IPAddress.NetworkToHostOrder(packetlength);
+
+                        byte[] dataBuffer = new byte[4096];
+                        RecvLength = clientSocket.Receive(dataBuffer, packetlength, SocketFlags.None);
+                        string JsonString = Encoding.UTF8.GetString(dataBuffer);
+                        Console.WriteLine(JsonString);
+
+                        JObject clientData = JObject.Parse(JsonString);
+
+                        string message = "{ \"message\" : \"" + clientData.Value<String>("message") + "\"}";
+                        byte[] messageBuffer = Encoding.UTF8.GetBytes(message);
+                        ushort length = (ushort)IPAddress.HostToNetworkOrder((short)messageBuffer.Length);
+
+                        headerBuffer = BitConverter.GetBytes(length);
+
+                        byte[] packetBuffer = new byte[headerBuffer.Length + messageBuffer.Length];
+                        Buffer.BlockCopy(headerBuffer, 0, packetBuffer, 0, headerBuffer.Length);
+                        Buffer.BlockCopy(messageBuffer, 0, packetBuffer, headerBuffer.Length, messageBuffer.Length);
+                        lock (_lock)
+                        {
+                            foreach (Socket sendSocket in clientSockets)
+                            {
+                                int SendLength = sendSocket.Send(packetBuffer, packetBuffer.Length, SocketFlags.None);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        string message = "{ \"message\" : \" Disconnect : " + clientSocket.RemoteEndPoint + " \"}";
+                        byte[] messageBuffer = Encoding.UTF8.GetBytes(message);
+                        ushort length = (ushort)IPAddress.HostToNetworkOrder((short)messageBuffer.Length);
+
+                        headerBuffer = BitConverter.GetBytes(length);
+
+                        byte[] packetBuffer = new byte[headerBuffer.Length + messageBuffer.Length];
+                        Buffer.BlockCopy(headerBuffer, 0, packetBuffer, 0, headerBuffer.Length);
+                        Buffer.BlockCopy(messageBuffer, 0, packetBuffer, headerBuffer.Length, messageBuffer.Length);
+
+                        clientSocket.Close();
+                        lock (_lock)
+                        {
+                            clientSockets.Remove(clientSocket);
+
+                            foreach (Socket sendSocket in clientSockets)
+                            {
+                                int SendLength = sendSocket.Send(packetBuffer, packetBuffer.Length, SocketFlags.None);
+                            }
+                        }
+
+                        return;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"Error 낸 놈 : {e.Message} {clientSocket.RemoteEndPoint}");
+
+                    string message = "{ \"message\" : \" Disconnect : " + clientSocket.RemoteEndPoint + " \"}";
+                    byte[] messageBuffer = Encoding.UTF8.GetBytes(message);
+                    ushort length = (ushort)IPAddress.HostToNetworkOrder((short)messageBuffer.Length);
+
+                    byte[] headerBuffer = new byte[2];
+
+                    headerBuffer = BitConverter.GetBytes(length);
+
+                    byte[] packetBuffer = new byte[headerBuffer.Length + messageBuffer.Length];
+                    Buffer.BlockCopy(headerBuffer, 0, packetBuffer, 0, headerBuffer.Length);
+                    Buffer.BlockCopy(messageBuffer, 0, packetBuffer, headerBuffer.Length, messageBuffer.Length);
+
+                    clientSocket.Close();
+                    lock (_lock)
+                    {
+                        clientSockets.Remove(clientSocket);
+
+                        foreach (Socket sendSocket in clientSockets)
+                        {
+                            int SendLength = sendSocket.Send(packetBuffer, packetBuffer.Length, SocketFlags.None);
+                        }
+                    }
+
+                    return;
+                }
+            }
+        }
+
+
         static void Main(string[] args)
+        {
+            listenSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+            IPEndPoint listenEndPoint = new IPEndPoint(IPAddress.Any, 4000);
+
+            listenSocket.Bind(listenEndPoint);
+
+            listenSocket.Listen(10);
+
+            Thread acceptThread = new Thread(new ThreadStart(AcceptThread));
+            acceptThread.IsBackground = true;
+            acceptThread.Start();
+
+            acceptThread.Join();
+
+            listenSocket.Close();
+        }
+
+        /// <summary>
+        /// 기본적인 간단한 스래트를 이용한 채팅 소켓 서버 형태
+        /// </summary>
+        /// <param name="args"></param>
+        static void SocketChatFirst(string[] args)
         {
             Socket listenSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
@@ -37,7 +186,7 @@ namespace Server
 
             List<Socket> clientSockets = new List<Socket>();
             List<Socket> checkRead = new List<Socket>(); // 감시형 소켓
-                
+
             while (true)
             {
                 checkRead.Clear(); // 비우고
@@ -165,7 +314,6 @@ namespace Server
 
             listenSocket.Close();
         }
-
 
         /// <summary>
         /// 소켓 이미지파일 전송 수업버전 서버
