@@ -31,7 +31,7 @@ namespace Client
         {
             Socket clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-            IPEndPoint listenEndPoint = new IPEndPoint(IPAddress.Parse("192.168.0.22"), 4000);
+            IPEndPoint listenEndPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 4000);
 
             clientSocket.Connect(listenEndPoint);
 
@@ -41,7 +41,7 @@ namespace Client
                 Console.Write("채팅 : ");
                 InputChat = Console.ReadLine();
 
-                string jsonString = "{\"message\" : \"" + InputChat + ".\"}";
+                string jsonString = "{\"id\" : \"광호\",  \"message\" : \"" + InputChat + ".\"}";
                 byte[] message = Encoding.UTF8.GetBytes(jsonString);
                 ushort length = (ushort)message.Length;
 

@@ -45,7 +45,7 @@ namespace Server
                 checkRead.Add(listenSocket); // 감시
 
                 // Polling
-                Socket.Select(checkRead, null, null, 10); // 멀티플렉싱 함수
+                Socket.Select(checkRead, null, null, -1); // 멀티플렉싱 함수
 
                 foreach (Socket findSocket in checkRead)
                 {
