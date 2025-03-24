@@ -47,7 +47,7 @@ namespace Server
 
                 Thread workThread = new Thread(new ParameterizedThreadStart(WorkThread));
                 workThread.IsBackground = true;
-                workThread.Start();
+                workThread.Start(clientSocket);
                 //threadManager.Add(workThread);
             }
         }
