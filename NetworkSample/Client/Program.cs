@@ -25,23 +25,17 @@ namespace Client
         //int,  //htonl
         //long  //htonll
         //[1][2]
+        static Socket clientSocket;
 
-        //[][]
-        static void Main(string[] args)
+        static void ChatInput()
         {
-            Socket clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
-            IPEndPoint listenEndPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 4000);
-
-            clientSocket.Connect(listenEndPoint);
-
-            while(true)
+            while (true)
             {
                 string InputChat;
                 Console.Write("채팅 : ");
                 InputChat = Console.ReadLine();
 
-                string jsonString = "{\"id\" : \"광호\",  \"message\" : \"" + InputChat + ".\"}";
+                string jsonString = "{\"id\" : \"익명\",  \"message\" : \"" + InputChat + ".\"}";
                 byte[] message = Encoding.UTF8.GetBytes(jsonString);
                 ushort length = (ushort)message.Length;
 
@@ -51,16 +45,45 @@ namespace Client
                 lengthBuffer = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)length));
                 Console.WriteLine("lengthBuffer : " + lengthBuffer.Length);
 
-                //[][][][][][][][][][][]
                 byte[] buffer = new byte[2 + length];
 
                 Buffer.BlockCopy(lengthBuffer, 0, buffer, 0, 2);
                 Buffer.BlockCopy(message, 0, buffer, 2, length);
 
                 int SendLength = clientSocket.Send(buffer, buffer.Length, SocketFlags.None);
+            }
+        }
+
+        //[][]
+        static void Main(string[] args)
+        {
+            clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+            IPEndPoint listenEndPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 4000);
+
+            clientSocket.Connect(listenEndPoint);
+
+            Thread chatInputThread = new Thread(new ThreadStart(ChatInput));
+            Thread recvThread = new Thread(new ThreadStart(RecvThread));
+            chatInputThread.IsBackground = true;
+            recvThread.IsBackground = true;
+            chatInputThread.Start();
+            recvThread.Start();
+
+            chatInputThread.Join();
+            recvThread.Join();
+
+            clientSocket.Close();
+        }
+
+        static void RecvThread()
+        {
+            while (true)
+            {
+                byte[] lengthBuffer = new byte[2];
 
                 int RecvLength = clientSocket.Receive(lengthBuffer, 2, SocketFlags.None);
-                length = BitConverter.ToUInt16(lengthBuffer, 0);
+                ushort length = BitConverter.ToUInt16(lengthBuffer, 0);
                 length = (ushort)IPAddress.NetworkToHostOrder((short)length);
 
                 byte[] recvBuffer = new byte[4096];
@@ -73,7 +96,6 @@ namespace Client
                 Thread.Sleep(100);
             }
 
-            clientSocket.Close();
         }
 
         /// <summary>

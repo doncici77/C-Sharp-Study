@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System.IO;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using System.Threading;
 
 public class MessageDataServer
 {
@@ -25,42 +26,67 @@ namespace Server
 
     class Program
     {
+        static Socket listenSocket;
+
+        static List<Socket> clientSockets = new List<Socket>();
+        static List<Socket> checkRead = new List<Socket>(); // 감시형 소켓
+
+        static string message;
+        static byte[] headerBuffer;
+
+
         static void Main(string[] args)
         {
-            Socket listenSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            listenSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             IPEndPoint listenEndPoint = new IPEndPoint(IPAddress.Any, 4000);
 
             listenSocket.Bind(listenEndPoint);
 
             listenSocket.Listen(10);
-
-            List<Socket> clientSockets = new List<Socket>();
-            List<Socket> checkRead = new List<Socket>(); // 감시형 소켓
                 
             while (true)
             {
-                checkRead.Clear(); // 비우고
-                checkRead = new List<Socket>(clientSockets); //복사 // 서로 같은 주소를 가르키지 않게 생성자로 새로 초기화 해줌
-                checkRead.Add(listenSocket); // 감시
+                Thread socketThread = new Thread(new ThreadStart(SocketThread));
+                Thread serverThread = new Thread(new ThreadStart(ServerThread));
 
-                // Polling
-                Socket.Select(checkRead, null, null, -1); // 멀티플렉싱 함수
+                socketThread.IsBackground = true;
+                serverThread.IsBackground = true;
 
-                foreach (Socket findSocket in checkRead)
+                socketThread.Start();
+                serverThread.Start();
+
+                socketThread.Join();
+                serverThread.Join();
+            }
+
+            listenSocket.Close();
+        }
+
+        static void SocketThread()
+        {
+            checkRead.Clear(); // 비우고
+            checkRead = new List<Socket>(clientSockets); //복사 // 서로 같은 주소를 가르키지 않게 생성자로 새로 초기화 해줌
+            checkRead.Add(listenSocket); // 감시
+
+            // Polling
+            Socket.Select(checkRead, null, null, -1); // 멀티플렉싱 함수
+
+            foreach (Socket findSocket in checkRead)
+            {
+                if (findSocket == listenSocket)
                 {
-                    if (findSocket == listenSocket)
-                    {
-                        Socket clientSocket = listenSocket.Accept();
-                        clientSockets.Add(clientSocket);
-                        Console.WriteLine("Connect client : " + clientSocket.RemoteEndPoint);
-                    }
-                    else // recvbyte > 0
+                    Socket clientSocket = listenSocket.Accept();
+                    clientSockets.Add(clientSocket);
+                    Console.WriteLine("Connect client : " + clientSocket.RemoteEndPoint);
+                }
+                else // recvbyte > 0
+                {
+                    try
                     {
                         //[][] [][][][][][]
-
                         //패킷 길이 받기(header)
-                        byte[] headerBuffer = new byte[2];
+                        headerBuffer = new byte[2];
                         int RecvLength = findSocket.Receive(headerBuffer, 2, SocketFlags.None);
 
                         if (RecvLength > 0)
@@ -78,45 +104,62 @@ namespace Server
 
                             JObject clientData = JObject.Parse(JsonString);
 
-                            string message = "{ \"message\" : \"" + clientData.Value<String>("message") + "\"}";
+                             message = "{ \"message\" : \"" + clientData.Value<String>("message") + "\"}";
 
-                            //Custom 패킷 만들기
-                            //다시 전송 메세지
-                            byte[] messageBuffer = Encoding.UTF8.GetBytes(message);
-                            ushort length = (ushort)IPAddress.HostToNetworkOrder((short)messageBuffer.Length);
-
-                            //길이  자료
-                            //[][] [][][][][][][][]
-                            headerBuffer = BitConverter.GetBytes(length);
-
-                            //[][][][][][][][][][][]
-                            byte[] packetBuffer = new byte[headerBuffer.Length + messageBuffer.Length];
-
-                            Buffer.BlockCopy(headerBuffer, 0, packetBuffer, 0, headerBuffer.Length);
-                            Buffer.BlockCopy(messageBuffer, 0, packetBuffer, headerBuffer.Length, messageBuffer.Length);
-
-                            foreach(Socket sendSocket in clientSockets)
-                            {
-                                int SendLength = findSocket.Send(packetBuffer, packetBuffer.Length, SocketFlags.None);
-                            }
+                            SendMessage(findSocket);
                         }
                         else
                         {
                             findSocket.Close();
                             clientSockets.Remove(findSocket);
+
+                             message = "{ \"message\" : \" Disconnect : " + findSocket.RemoteEndPoint + "\"}";
+
+                            SendMessage(findSocket);
                         }
                     }
-                }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"Error 낸 놈 : {e.Message} {findSocket.RemoteEndPoint}");
 
-                // Sever 작업
-                {
-                    Console.WriteLine("서버 작업");
+                        message = "{ \"message\" : \" Disconnect : " + findSocket.RemoteEndPoint + " \"}";
+
+                        SendMessage(findSocket);
+                    }
                 }
             }
-
-            listenSocket.Close();
         }
 
+        static void ServerThread()
+        {
+            // Sever 작업
+            {
+                Console.WriteLine("서버 작업");
+            }
+        }
+
+        static void SendMessage(Socket findSocket)
+        {
+            //Custom 패킷 만들기
+            //다시 전송 메세지
+            byte[] messageBuffer = Encoding.UTF8.GetBytes(message);
+            ushort length = (ushort)IPAddress.HostToNetworkOrder((short)messageBuffer.Length);
+
+            //길이  자료
+            //[][] [][][][][][][][]
+            headerBuffer = BitConverter.GetBytes(length);
+
+            //[][][][][][][][][][][]
+            byte[] packetBuffer = new byte[headerBuffer.Length + messageBuffer.Length];
+
+            Buffer.BlockCopy(headerBuffer, 0, packetBuffer, 0, headerBuffer.Length);
+            Buffer.BlockCopy(messageBuffer, 0, packetBuffer, headerBuffer.Length, messageBuffer.Length);
+
+            foreach (Socket sendSocket in clientSockets)
+            {
+                int SendLength = findSocket.Send(packetBuffer, packetBuffer.Length, SocketFlags.None);
+            }
+        }
 
         /// <summary>
         /// 소켓 이미지파일 전송 수업버전 서버
