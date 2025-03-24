@@ -9,14 +9,25 @@ namespace L20250324_Thread
 {
     internal class Program
     {
+        static Object _lock = new Object(); // 동기화 객체
+
+        // atomic, 공유영역 작업은 원자성, 중간 끊지 말라고
         static int Money = 0;
+
+        static bool lockTaken = false;
 
         static void Add()
 
         {
-            for(int i = 0; i < 100000; i++)
+            for (int i = 0; i < 100000; i++)
             {
-                Money++;
+                //Interlocked.Increment(ref Money);
+                //_spinLock.Enter(ref lockTaken);
+                lock (_lock)
+                {
+                    Money++;
+                }
+                //_spinLock.Exit();
             }
         }
 
@@ -24,7 +35,13 @@ namespace L20250324_Thread
         {
             for (int i = 0; i < 100000; i++)
             {
-                Money--;
+                // Interlocked.Decrement(ref Money);
+                //_spinLock.Enter(ref lockTaken);
+                lock (_lock)
+                {   
+                    Money--;
+                }
+                //_spinLock.Exit();
             }
         }
 
