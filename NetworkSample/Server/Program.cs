@@ -45,7 +45,7 @@ namespace Server
                 checkRead.Add(listenSocket); // 감시
 
                 // Polling
-                Socket.Select(checkRead, null, null, -1); // 멀티플렉싱 함수
+                Socket.Select(checkRead, null, null, 10); // 멀티플렉싱 함수
 
                 foreach (Socket findSocket in checkRead)
                 {
@@ -73,14 +73,15 @@ namespace Server
                             //실제 패킷(header 길이 만큼)
                             byte[] dataBuffer = new byte[4096];
                             RecvLength = findSocket.Receive(dataBuffer, packetlength, SocketFlags.None);
-
                             string JsonString = Encoding.UTF8.GetString(dataBuffer);
-
                             Console.WriteLine(JsonString);
+
+                            JObject clientData = JObject.Parse(JsonString);
+
+                            string message = "{ \"message\" : \"" + clientData.Value<String>("message") + "\"}";
 
                             //Custom 패킷 만들기
                             //다시 전송 메세지
-                            string message = "{ \"message\" : \"클라이언트 받고 서버꺼 추가.\"}";
                             byte[] messageBuffer = Encoding.UTF8.GetBytes(message);
                             ushort length = (ushort)IPAddress.HostToNetworkOrder((short)messageBuffer.Length);
 
@@ -108,7 +109,9 @@ namespace Server
                 }
 
                 // Sever 작업
-
+                {
+                    Console.WriteLine("서버 작업");
+                }
             }
 
             listenSocket.Close();
