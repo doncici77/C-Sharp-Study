@@ -44,6 +44,7 @@ namespace Server
                 checkRead = new List<Socket>(clientSockets); //복사 // 서로 같은 주소를 가르키지 않게 생성자로 새로 초기화 해줌
                 checkRead.Add(listenSocket); // 감시
 
+                // Polling
                 Socket.Select(checkRead, null, null, -1); // 멀티플렉싱 함수
 
                 foreach (Socket findSocket in checkRead)
@@ -93,7 +94,10 @@ namespace Server
                             Buffer.BlockCopy(headerBuffer, 0, packetBuffer, 0, headerBuffer.Length);
                             Buffer.BlockCopy(messageBuffer, 0, packetBuffer, headerBuffer.Length, messageBuffer.Length);
 
-                            int SendLength = findSocket.Send(packetBuffer, packetBuffer.Length, SocketFlags.None);
+                            foreach(Socket sendSocket in clientSockets)
+                            {
+                                int SendLength = findSocket.Send(packetBuffer, packetBuffer.Length, SocketFlags.None);
+                            }
                         }
                         else
                         {
@@ -102,6 +106,9 @@ namespace Server
                         }
                     }
                 }
+
+                // Sever 작업
+
             }
 
             listenSocket.Close();

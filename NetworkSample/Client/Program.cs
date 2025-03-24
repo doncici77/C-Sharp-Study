@@ -29,7 +29,7 @@ namespace Client
         //[][]
         static void Main(string[] args)
         {
-            string jsonString = "{\"message\" : \"이건 클라이언트에서 서버로 보내는 패킷.\"}";
+            string jsonString = "{\"message\" : \"박광호 이건 클라이언트에서 서버로 보내는 패킷.\"}";
             byte[] message = Encoding.UTF8.GetBytes(jsonString);
             ushort length = (ushort)message.Length;
 
@@ -47,7 +47,7 @@ namespace Client
 
             Socket clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-            IPEndPoint listenEndPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 4000);
+            IPEndPoint listenEndPoint = new IPEndPoint(IPAddress.Parse("192.168.0.22"), 4000);
 
             clientSocket.Connect(listenEndPoint);
 
