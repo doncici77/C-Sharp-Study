@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -6,6 +7,14 @@ using System.Threading;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+
+[Serializable]
+public class Packet
+{
+    public string code;
+    public string id;
+    public string message;
+}
 
 [Serializable]
 public class LoginPacket
@@ -39,6 +48,7 @@ public class NetworkManager : MonoBehaviour
     public TMP_InputField passwordUI;
     public TMP_InputField idUI;
 
+    public Queue<Packet> data;
 
     void Start()
     {
