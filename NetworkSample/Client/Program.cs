@@ -43,28 +43,8 @@ namespace Client
 
         }
 
-        static void Main(string[] args)
+        static void RecvPacket(Socket toSocket, out string jsonString)
         {
-            clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
-            IPEndPoint listenEndPoint = new IPEndPoint(IPAddress.Parse("192.168.0.22"), 4000);
-
-            clientSocket.Connect(listenEndPoint);
-
-            JObject result = new JObject();
-            //result.Add("code", "Login");
-            //result.Add("id", "htk008");
-            //result.Add("password", "1235");
-            //SendPacket(clientSocket, result.ToString());
-
-            result.Add("code", "Signup");
-            result.Add("id", "robot");
-            result.Add("password", "1234");
-            result.Add("name", "로봇");
-            result.Add("email", "robot@a.com");
-            SendPacket(clientSocket, result.ToString());
-
-
             byte[] lengthBuffer = new byte[2];
 
             int RecvLength = clientSocket.Receive(lengthBuffer, 2, SocketFlags.None);
@@ -73,7 +53,32 @@ namespace Client
             byte[] recvBuffer = new byte[4096];
             RecvLength = clientSocket.Receive(recvBuffer, length, SocketFlags.None);
 
-            string JsonString = Encoding.UTF8.GetString(recvBuffer);
+            jsonString = Encoding.UTF8.GetString(recvBuffer);
+        }
+
+        static void Main(string[] args)
+        {
+            clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+            IPEndPoint listenEndPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 4000);
+
+            clientSocket.Connect(listenEndPoint);
+
+            JObject result = new JObject();
+            result.Add("code", "Login");
+            result.Add("id", "htk008kr");
+            result.Add("password", "5678");
+            SendPacket(clientSocket, result.ToString());
+
+            //result.Add("code", "Signup");
+            //result.Add("id", "robot");
+            //result.Add("password", "1234");
+            //result.Add("name", "로봇");
+            //result.Add("email", "robot@a.com");
+            //SendPacket(clientSocket, result.ToString());
+
+            string JsonString;
+            RecvPacket(clientSocket, out JsonString);
 
             Console.WriteLine(JsonString);
 

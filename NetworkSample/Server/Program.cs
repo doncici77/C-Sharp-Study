@@ -151,6 +151,10 @@ namespace Server
                         catch (Exception e)
                         {
                             Console.WriteLine(e.Message);
+                            JObject result = new JObject();
+                            result.Add("code", "signupresult");
+                            result.Add("messge", "failed");
+                            SendPacket(clientSocket, result.ToString());
                         }
                         finally
                         {
@@ -160,25 +164,18 @@ namespace Server
                     else
                     {
                         string message = "{ \"message\" : \" Disconnect : " + clientSocket.RemoteEndPoint + " \"}";
-                        byte[] messageBuffer = Encoding.UTF8.GetBytes(message);
-                        ushort length = (ushort)IPAddress.HostToNetworkOrder((short)messageBuffer.Length);
 
-                        headerBuffer = BitConverter.GetBytes(length);
+                        SendPacket(clientSocket, message);
 
-                        byte[] packetBuffer = new byte[headerBuffer.Length + messageBuffer.Length];
-                        Buffer.BlockCopy(headerBuffer, 0, packetBuffer, 0, headerBuffer.Length);
-                        Buffer.BlockCopy(messageBuffer, 0, packetBuffer, headerBuffer.Length, messageBuffer.Length);
-
-                        clientSocket.Close();
                         lock (_lock)
                         {
                             clientSockets.Remove(clientSocket);
-
-                            foreach (Socket sendSocket in clientSockets)
-                            {
-                                int SendLength = sendSocket.Send(packetBuffer, packetBuffer.Length, SocketFlags.None);
-                            }
                         }
+
+                        clientSocket.Close();
+
+
+
 
                         return;
                     }
@@ -188,27 +185,15 @@ namespace Server
                     Console.WriteLine($"Error 낸 놈 : {e.Message} {clientSocket.RemoteEndPoint}");
 
                     string message = "{ \"message\" : \" Disconnect : " + clientSocket.RemoteEndPoint + " \"}";
-                    byte[] messageBuffer = Encoding.UTF8.GetBytes(message);
-                    ushort length = (ushort)IPAddress.HostToNetworkOrder((short)messageBuffer.Length);
 
-                    byte[] headerBuffer = new byte[2];
+                    SendPacket(clientSocket, message);
 
-                    headerBuffer = BitConverter.GetBytes(length);
-
-                    byte[] packetBuffer = new byte[headerBuffer.Length + messageBuffer.Length];
-                    Buffer.BlockCopy(headerBuffer, 0, packetBuffer, 0, headerBuffer.Length);
-                    Buffer.BlockCopy(messageBuffer, 0, packetBuffer, headerBuffer.Length, messageBuffer.Length);
-
-                    clientSocket.Close();
                     lock (_lock)
                     {
                         clientSockets.Remove(clientSocket);
-
-                        foreach (Socket sendSocket in clientSockets)
-                        {
-                            int SendLength = sendSocket.Send(packetBuffer, packetBuffer.Length, SocketFlags.None);
-                        }
                     }
+
+                    clientSocket.Close();
 
                     return;
                 }
@@ -235,7 +220,7 @@ namespace Server
         {
             listenSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-            IPEndPoint listenEndPoint = new IPEndPoint(IPAddress.Parse("192.168.0.22"), 4000);
+            IPEndPoint listenEndPoint = new IPEndPoint(IPAddress.Any, 4000);
 
             listenSocket.Bind(listenEndPoint);
 
