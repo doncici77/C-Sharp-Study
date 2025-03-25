@@ -45,6 +45,7 @@ namespace Server
                 }
                 Console.WriteLine("Connect client : " + clientSocket.RemoteEndPoint);
 
+                // ParameterizedThreadStart : 델리게이트에서 이름만 바뀐 느낌
                 Thread workThread = new Thread(new ParameterizedThreadStart(WorkThread));
                 workThread.IsBackground = true;
                 workThread.Start(clientSocket);
