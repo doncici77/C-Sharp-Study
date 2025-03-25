@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Data.SqlClient;
 using MySqlConnector;
+using System.Net.NetworkInformation;
 
 public class MessageDataServer
 {
@@ -86,32 +87,51 @@ namespace Server
                             if (code.CompareTo("Login") == 0)
                             {
                                 // login 로그인
+                                string userId = clientData.Value<string>("id");
+                                string userPassword = clientData.Value<string>("password"); 
+
                                 mySqlConnection.Open();
                                 MySqlCommand mySqlCommand = new MySqlCommand();
-
                                 mySqlCommand.Connection = mySqlConnection;
+
                                 mySqlCommand.CommandText = "select * from users where user_id = @user_id and user_password = @user_password";
                                 mySqlCommand.Prepare();
-                                mySqlCommand.Parameters.AddWithValue("@user_id", "htk008kr");
-                                mySqlCommand.Parameters.AddWithValue("@user_password", "5678");
+                                mySqlCommand.Parameters.AddWithValue("@user_id", userId);
+                                mySqlCommand.Parameters.AddWithValue("@user_password", userPassword);
 
                                 MySqlDataReader dataReader = mySqlCommand.ExecuteReader();
+                                if(dataReader.Read())
+                                {
+                                    // 로그인 성공 로직
+                                }
+                                else
+                                {
+                                    // 로그인 실패 로직
+                                }
                             }
                             else if (code.CompareTo("SignUp") == 0)
                             {
                                 // 회원가입
+                                string userId = clientData.Value<string>("id");
+                                string userPassword = clientData.Value<string>("password");
+                                string name = clientData.Value<string>("name");
+                                string email = clientData.Value<string>("email");
+
                                 mySqlConnection.Open();
                                 MySqlCommand mySqlCommand2 = new MySqlCommand();
-
                                 mySqlCommand2.Connection = mySqlConnection;
+
                                 mySqlCommand2.CommandText = "insert into users (user_id, user_password, name, email) values (@user_id, @user_password, @name, @email)";
                                 mySqlCommand2.Prepare();
-                                mySqlCommand2.Parameters.AddWithValue("@user_id", "abc001");
-                                mySqlCommand2.Parameters.AddWithValue("@user_password", "1111");
-                                mySqlCommand2.Parameters.AddWithValue("@name", "홍길동");
-                                mySqlCommand2.Parameters.AddWithValue("@email", "abc001@naver.com");
+                                mySqlCommand2.Parameters.AddWithValue("@user_id", userId);
+                                mySqlCommand2.Parameters.AddWithValue("@user_password", userPassword);
+                                mySqlCommand2.Parameters.AddWithValue("@name", name);
+                                mySqlCommand2.Parameters.AddWithValue("@email", email);
 
                                 mySqlCommand2.ExecuteNonQuery();
+
+
+                                // 가입 성공 로직
                             }
                         }
                         catch(Exception ex)
