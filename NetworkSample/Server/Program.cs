@@ -7,6 +7,8 @@ using System.IO;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Threading;
+using System.Data.SqlClient;
+using MySqlConnector;
 
 public class MessageDataServer
 {
@@ -74,9 +76,54 @@ namespace Server
                         string JsonString = Encoding.UTF8.GetString(dataBuffer);
                         Console.WriteLine(JsonString);
 
-                        JObject clientData = JObject.Parse(JsonString);
+                        string connectionString = "server=localhost;user=root;database=membership;password=0321";
+                        MySqlConnection mySqlConnection = new MySqlConnection(connectionString);
 
-                        string message = "{ \"message\" : \"" + clientData.Value<String>("message") + "\"}";
+                        JObject clientData = JObject.Parse(JsonString);
+                        string code = clientData.Value<string>("code");
+                        try
+                        {
+                            if (code.CompareTo("Login") == 0)
+                            {
+                                // login 로그인
+                                mySqlConnection.Open();
+                                MySqlCommand mySqlCommand = new MySqlCommand();
+
+                                mySqlCommand.Connection = mySqlConnection;
+                                mySqlCommand.CommandText = "select * from users where user_id = @user_id and user_password = @user_password";
+                                mySqlCommand.Prepare();
+                                mySqlCommand.Parameters.AddWithValue("@user_id", "htk008kr");
+                                mySqlCommand.Parameters.AddWithValue("@user_password", "5678");
+
+                                MySqlDataReader dataReader = mySqlCommand.ExecuteReader();
+                            }
+                            else if (code.CompareTo("SignUp") == 0)
+                            {
+                                // 회원가입
+                                mySqlConnection.Open();
+                                MySqlCommand mySqlCommand2 = new MySqlCommand();
+
+                                mySqlCommand2.Connection = mySqlConnection;
+                                mySqlCommand2.CommandText = "insert into users (user_id, user_password, name, email) values (@user_id, @user_password, @name, @email)";
+                                mySqlCommand2.Prepare();
+                                mySqlCommand2.Parameters.AddWithValue("@user_id", "abc001");
+                                mySqlCommand2.Parameters.AddWithValue("@user_password", "1111");
+                                mySqlCommand2.Parameters.AddWithValue("@name", "홍길동");
+                                mySqlCommand2.Parameters.AddWithValue("@email", "abc001@naver.com");
+
+                                mySqlCommand2.ExecuteNonQuery();
+                            }
+                        }
+                        catch(Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
+                        finally
+                        {
+                            mySqlConnection.Close();
+                        }
+
+                        /*string message = "{ \"message\" : \"" + clientData.Value<String>("message") + "\"}";
                         byte[] messageBuffer = Encoding.UTF8.GetBytes(message);
                         ushort length = (ushort)IPAddress.HostToNetworkOrder((short)messageBuffer.Length);
 
@@ -91,7 +138,7 @@ namespace Server
                             {
                                 int SendLength = sendSocket.Send(packetBuffer, packetBuffer.Length, SocketFlags.None);
                             }
-                        }
+                        }*/
                     }
                     else
                     {
